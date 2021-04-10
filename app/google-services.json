@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "153688779630",
+    "project_id": "socrm-88552",
+    "storage_bucket": "socrm-88552.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:153688779630:android:a2c5fc000c69a863c22f7f",
+        "android_client_info": {
+          "package_name": "com.example.socrm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "153688779630-sltioi83pqdflpff1q7eikmpi9joli7j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB7A55lbLmzQFuQCJ0sAETXMDuXksroKNQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "153688779630-sltioi83pqdflpff1q7eikmpi9joli7j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
