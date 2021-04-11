@@ -12,7 +12,6 @@
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="48dp"
-        android:elevation="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,7 +36,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="25dp"
             android:fontFamily="@font/montserrat_bold"
-            android:shadowColor="@color/black"
+            android:shadowColor="#606060"
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="1"
@@ -45,39 +44,42 @@
             android:textColor="@color/white"
             android:textSize="24sp" />
 
-        <EditText
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/editTextTextEmailAddress"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="15dp"
-            android:background="@drawable/custom_btn"
-            android:drawableStart="@drawable/custom_email_icon"
-            android:drawablePadding="7dp"
-            android:ems="10"
-            android:fontFamily="@font/montserrat_medium"
-            android:hint="E-mail"
-            android:inputType="textEmailAddress"
-            android:elevation="3dp"
-            android:paddingStart="10dp"
-            android:textSize="15sp" />
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginBottom="10dp"
+            app:startIconDrawable="@drawable/ic_email"
+            style="@style/inputStyle">
 
-        <EditText
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:background="@drawable/custom_btn"
+                android:fontFamily="@font/montserrat_medium"
+                android:hint="E-mail"
+                android:layout_height="match_parent"
+                android:inputType="textEmailAddress" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/editTextTextPassword"
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/custom_btn"
-            android:drawableStart="@drawable/custom_password_icon"
-            android:drawablePadding="13dp"
-            android:ems="10"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginBottom="10dp"
             android:elevation="3dp"
-            android:fontFamily="@font/montserrat_medium"
-            android:hint="Пароль"
-            android:inputType="textPassword"
-            android:paddingStart="14dp"
-            android:textSize="15sp" />
+            app:startIconDrawable="@drawable/ic_password"
+            app:passwordToggleEnabled="true"
+            style="@style/inputStyle">
 
-
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:background="@drawable/custom_btn"
+                android:fontFamily="@font/montserrat_medium"
+                android:hint="Пароль"
+                android:layout_height="match_parent"
+                android:inputType="textPassword" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/materialButtonLogin"
@@ -94,12 +96,27 @@
             android:layout_height="55dp"
             android:onClick="regUser"
             android:backgroundTint="@color/white"
-            android:fontFamily="@font/montserrat_bold"
             android:text="Зарегистрироваться"
-            android:textAllCaps="false"
             android:textColor="@color/black"
+            style="@style/btnStyle"/>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/forgotPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:onClick="regUser"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:fontFamily="@font/montserrat_medium"
+            android:text="Забыли пароль?"
+            android:textAllCaps="false"
+            android:textSize="14dp"
+            android:shadowColor="#606060"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            app:elevation="3dp"
+            android:textColor="@color/white"
             app:cornerRadius="10dp" />
-
     </LinearLayout>
 
 
