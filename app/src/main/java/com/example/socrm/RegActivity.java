@@ -31,8 +31,6 @@ public class RegActivity extends AppCompatActivity {
     private TextInputLayout editTextEmail, editTextPassword, editTextForgotPassword;
     private FirebaseAuth mAuth;
     private boolean isErrorEmail, isErrorPassword, isErrorForgotPassword = false;
-    private TextInputEditText listener;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +40,7 @@ public class RegActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         editTextEmail = findViewById(R.id.editTextTextEmailAddress);
         editTextPassword = findViewById(R.id.editTextTextPassword);
-        editTextForgotPassword = findViewById(R.id.forgotPassword);
+        editTextForgotPassword = findViewById(R.id.editTextTextPasswordRepeat);
 
         // Прослушиватель изменения текста
         editTextEmail.getEditText().addTextChangedListener(new TextWatcher() {
@@ -61,7 +59,7 @@ public class RegActivity extends AppCompatActivity {
                 isCorrectStyleInput(editTextEmail, isErrorEmail);
             }
         });
-        
+
         // Прослушиватель изменения текста
         editTextPassword.getEditText().addTextChangedListener(new TextWatcher() {
             @Override
@@ -121,7 +119,7 @@ public class RegActivity extends AppCompatActivity {
                     // Проверка корректности пароля
                     if (isPasswordValid(editTextPassword.getEditText().getText().toString())){
                         // Проверка на соответствие повторения пароля
-                        if (editTextPassword.getEditText().getText().toString().equals( editTextForgotPassword.getEditText().getText().toString())) {
+                        if (editTextPassword.getEditText().getText().toString().equals(editTextForgotPassword.getEditText().getText().toString())) {
                             mAuth.createUserWithEmailAndPassword(editTextEmail.getEditText().getText().toString(), editTextPassword.getEditText().getText().toString())
                                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                                         @Override
