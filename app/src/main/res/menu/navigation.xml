@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_orders"
+        android:icon="@drawable/ic_orders"
+        android:title="Заказы" />
+
+    <item
+        android:id="@+id/navigation_products"
+        android:icon="@drawable/ic_products"
+        android:title="Товары" />
+
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_user_profile"
+        android:title="Профиль" />
+</menu>

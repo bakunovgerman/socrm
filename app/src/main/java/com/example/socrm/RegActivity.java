@@ -182,17 +182,16 @@ public class RegActivity extends AppCompatActivity {
                                             if (task.isSuccessful()) {
                                                 // Успешная регистрация
                                                 FirebaseUser user = mAuth.getCurrentUser();
-                                                mDatabase.child("shops").child("1").setValue(new Shop(editTextShopName.getEditText().getText().toString(),
+                                                // добавление магазина в бд
+                                                String id = mDatabase.push().getKey();
+                                                mDatabase.child("shops").child(id).setValue(new Shop(editTextShopName.getEditText().getText().toString(),
                                                         editTextEmail.getEditText().getText().toString()));
-
-
-                                                // Create a storage reference from our app
+                                                // Загрузка фото в бд
                                                 StorageReference storageRef = storage.getReference();
                                                 Uri file = Uri.fromFile(new File(uri.getPath()));
-                                                StorageReference riversRef = storageRef.child("images/"+file.getLastPathSegment());
+                                                StorageReference riversRef = storageRef.child("images/"+id+"/"+file.getLastPathSegment());
                                                 UploadTask uploadTask = riversRef.putFile(uri);
-
-                                                // Register observers to listen for when the download is done or if it fails
+                                                // отслеживание загрузки
                                                 uploadTask.addOnFailureListener(new OnFailureListener() {
                                                     @Override
                                                     public void onFailure(@NonNull Exception exception) {

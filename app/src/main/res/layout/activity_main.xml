@@ -84,6 +84,7 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/materialButtonLogin"
             android:layout_width="300dp"
+            android:onClick="Login"
             android:layout_height="55dp"
             android:fontFamily="@font/montserrat_bold"
             android:text="Вход"
