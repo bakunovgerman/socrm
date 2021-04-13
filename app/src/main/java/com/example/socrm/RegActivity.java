@@ -1,9 +1,16 @@
 package com.example.socrm;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -12,11 +19,15 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.socrm.data.Shop;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -25,9 +36,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class RegActivity extends AppCompatActivity {
 
@@ -36,7 +57,13 @@ public class RegActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     // Объект подключения БД
     private DatabaseReference mDatabase;
-    private boolean isErrorEmail, isErrorPassword, isErroreRepeatPassword = false;
+    // Объект для облачного хранилища
+    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private boolean isErrorEmail, isErrorPassword, isErrorRepeatPassword = false;
+    // REQUEST CODE
+    private final int PHOTO_REQUEST = 1;
+    private Uri uri;
+    private CircleImageView avatarShop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,11 +74,14 @@ public class RegActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         // подключения БД
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        // подключаемся к облачному хранилищу
+        StorageReference storageRef = storage.getReference();
 
         editTextEmail = findViewById(R.id.editTextTextEmailAddress);
         editTextPassword = findViewById(R.id.editTextTextPassword);
         editTextRepeatPassword = findViewById(R.id.editTextTextPasswordRepeat);
         editTextShopName = findViewById(R.id.editTextTitleShop);
+        avatarShop = findViewById(R.id.imageButtonAvatarShop);
 
         // Прослушиватель изменения текста
         editTextEmail.getEditText().addTextChangedListener(new TextWatcher() {
@@ -103,7 +133,7 @@ public class RegActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if (editTextPassword.getEditText().getText().toString().equals(editTextRepeatPassword.getEditText().getText().toString())){
-                    if (isErroreRepeatPassword) {
+                    if (isErrorRepeatPassword) {
                         editTextRepeatPassword.setError(null);
                     }
                     editTextRepeatPassword.setEndIconDrawable(R.drawable.ic_correct);
@@ -116,8 +146,6 @@ public class RegActivity extends AppCompatActivity {
             }
         });
 
-        //TextInputLayout til = (TextInputLayout) findViewById(R.id.av_phoneNO);
-        //til.setError("You need to enter a name");
     }
     // Метод стилизации корректного инпута
     public void isCorrectStyleInput(TextInputLayout textInputEditText, boolean isError){
@@ -156,6 +184,29 @@ public class RegActivity extends AppCompatActivity {
                                                 FirebaseUser user = mAuth.getCurrentUser();
                                                 mDatabase.child("shops").child("1").setValue(new Shop(editTextShopName.getEditText().getText().toString(),
                                                         editTextEmail.getEditText().getText().toString()));
+
+
+                                                // Create a storage reference from our app
+                                                StorageReference storageRef = storage.getReference();
+                                                Uri file = Uri.fromFile(new File(uri.getPath()));
+                                                StorageReference riversRef = storageRef.child("images/"+file.getLastPathSegment());
+                                                UploadTask uploadTask = riversRef.putFile(uri);
+
+                                                // Register observers to listen for when the download is done or if it fails
+                                                uploadTask.addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception exception) {
+                                                        // Handle unsuccessful uploads
+                                                        Log.d("storage", "fail");
+                                                    }
+                                                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                                    @Override
+                                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                                        Log.d("storage", "success");
+                                                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                                                        // ...
+                                                    }
+                                                });
                                                 //updateUI(user);
                                             } else {
                                                 // Ошибка регистрации
@@ -169,7 +220,7 @@ public class RegActivity extends AppCompatActivity {
                         }
                         else{
                             editTextRepeatPassword.setError("Пароли не совпадают");
-                            isErroreRepeatPassword = true;
+                            isErrorRepeatPassword = true;
                         }
 
                     }
@@ -229,5 +280,26 @@ public class RegActivity extends AppCompatActivity {
     }
 
     private void reload() {
+    }
+
+    public void chooserImage(View view) {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, PHOTO_REQUEST);
+        //setResult(RESULT_OK);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PHOTO_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null){
+            uri = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                avatarShop.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
