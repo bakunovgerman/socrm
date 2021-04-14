@@ -34,7 +34,15 @@ public class MainActivity extends AppCompatActivity {
         editTextEmail = findViewById(R.id.editTextTextEmailAddress);
         editTextPassword = findViewById(R.id.editTextTextPassword);
     }
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser != null){
+            startActivity(new Intent(MainActivity.this, PersonalAccountBottomNavigation.class));
+        }
+    }
     public void openRegActivity(View view) {
         startActivity(new Intent(this, RegActivity.class));
     }
