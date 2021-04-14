@@ -26,6 +26,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
@@ -53,6 +55,7 @@ public class ProfileFragment extends Fragment {
     private FrameLayout frameLayout;
     private TextInputLayout emailTextInputLayout, passwordTextInputLayout, passwordRepeatTextInputLayout;
     private MaterialButton editBtn, saveBtn, cancelBtn;
+
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -94,8 +97,6 @@ public class ProfileFragment extends Fragment {
         Glide.with(getContext()).load(uriAvatar).into(circleImageView);
         frameLayout.setVisibility(View.GONE);
 
-
-
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,19 +114,88 @@ public class ProfileFragment extends Fragment {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                editBtn.setVisibility(View.VISIBLE);
-                emailTextInputLayout.setEnabled(false);
-                passwordTextInputLayout.setEnabled(false);
-                passwordRepeatTextInputLayout.setEnabled(false);
-                passwordRepeatTextInputLayout.setVisibility(View.GONE);
-                cancelBtn.setVisibility(View.GONE);
-                saveBtn.setVisibility(View.GONE);
-                passwordTextInputLayout.setHint("Пароль");
+                cancelChange();
                 passwordTextInputLayout.getEditText().setText("ggggggg");
+            }
+        });
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                AuthCredential credential = EmailAuthProvider
+                        .getCredential("german.bakunov@gmail.com", "Gera2002");
+
+// Prompt the user to re-provide their sign-in credentials
+                user.reauthenticate(credential)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Log.d("checkChange", "User re-authenticated.");
+                            }
+                        });
+                if (user != null){
+                    if (!emailTextInputLayout.getEditText().getText().toString().equals(email)){
+                        if(RegActivity.isEmailValid(emailTextInputLayout.getEditText().getText().toString())){
+                            emailTextInputLayout.setError(null);
+                            user.updateEmail(emailTextInputLayout.getEditText().getText().toString())
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d("checkChange", "User email address updated.");
+                                            } else{
+                                                Log.d("checkChange", "User email address updated FAIL");
+                                            }
+                                        }
+                                    });
+                        }
+                        else{
+                            emailTextInputLayout.setError("E-mail некорректный");
+                        }
+                    }
+                    if (passwordTextInputLayout.getEditText().getText().toString()
+                            .equals(passwordRepeatTextInputLayout.getEditText().getText().toString())){
+                        if (RegActivity.isPasswordValid(passwordTextInputLayout.getEditText().getText().toString())){
+                            passwordTextInputLayout.setError(null);
+                            passwordRepeatTextInputLayout.setError(null);
+                            user.updatePassword(passwordTextInputLayout.getEditText().getText().toString())
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d("checkChange", "User password updated.");
+                                            } else {
+                                                Log.d("checkChange", "User password updated FAIL");
+                                            }
+                                        }
+                                    });
+                            //cancelChange();
+                        }
+                        else{
+                            passwordTextInputLayout.setError("Пароль некорректный");
+                            passwordRepeatTextInputLayout.setError("Пароль некорректный");
+                        }
+                    }
+                    else {
+                        passwordRepeatTextInputLayout.setError("Пароль не совпадает");
+                    }
+                } else{
+                    Log.d("checkChange", "User pis null");
+                }
+
             }
         });
 
         return v;
     }
-
+    public void cancelChange(){
+        editBtn.setVisibility(View.VISIBLE);
+        emailTextInputLayout.setEnabled(false);
+        passwordTextInputLayout.setEnabled(false);
+        passwordRepeatTextInputLayout.setEnabled(false);
+        passwordRepeatTextInputLayout.setVisibility(View.GONE);
+        cancelBtn.setVisibility(View.GONE);
+        saveBtn.setVisibility(View.GONE);
+        passwordTextInputLayout.setHint("Пароль");
+    }
 }
