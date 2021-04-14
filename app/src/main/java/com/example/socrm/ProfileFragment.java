@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -50,7 +51,8 @@ public class ProfileFragment extends Fragment {
     private String shopName, email;
     private Uri uriAvatar;
     private FrameLayout frameLayout;
-    private TextInputLayout emailTextInputLayout;
+    private TextInputLayout emailTextInputLayout, passwordTextInputLayout, passwordRepeatTextInputLayout;
+    private MaterialButton editBtn, saveBtn, cancelBtn;
     public ProfileFragment() {
         // Required empty public constructor
     }
@@ -81,12 +83,49 @@ public class ProfileFragment extends Fragment {
         shopNameTextView = v.findViewById(R.id.shopNameTextView);
         frameLayout = v.findViewById(R.id.progressbar_layout);
         emailTextInputLayout = v.findViewById(R.id.editTextEmailAddress);
+        passwordTextInputLayout = v.findViewById(R.id.editTextTextPassword);
+        passwordRepeatTextInputLayout = v.findViewById(R.id.editTextTextPasswordRepeat);
+        saveBtn = v.findViewById(R.id.saveBtn);
+        editBtn = v.findViewById(R.id.editBtn);
+        cancelBtn = v.findViewById(R.id.cancelBtn);
 
         shopNameTextView.setText(shopName);
         emailTextInputLayout.getEditText().setText(email);
         Glide.with(getContext()).load(uriAvatar).into(circleImageView);
         frameLayout.setVisibility(View.GONE);
 
+
+
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editBtn.setVisibility(View.GONE);
+                emailTextInputLayout.setEnabled(true);
+                passwordTextInputLayout.setEnabled(true);
+                passwordTextInputLayout.getEditText().setText("");
+                passwordTextInputLayout.setHint("Новый пароль");
+                passwordRepeatTextInputLayout.setEnabled(true);
+                passwordRepeatTextInputLayout.setVisibility(View.VISIBLE);
+                cancelBtn.setVisibility(View.VISIBLE);
+                saveBtn.setVisibility(View.VISIBLE);
+            }
+        });
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editBtn.setVisibility(View.VISIBLE);
+                emailTextInputLayout.setEnabled(false);
+                passwordTextInputLayout.setEnabled(false);
+                passwordRepeatTextInputLayout.setEnabled(false);
+                passwordRepeatTextInputLayout.setVisibility(View.GONE);
+                cancelBtn.setVisibility(View.GONE);
+                saveBtn.setVisibility(View.GONE);
+                passwordTextInputLayout.setHint("Пароль");
+                passwordTextInputLayout.getEditText().setText("ggggggg");
+            }
+        });
+
         return v;
     }
+
 }

@@ -39,7 +39,7 @@
             app:endIconMode="custom"
             app:endIconTint="@color/green_my"
             android:layout_marginBottom="10dp"
-            app:startIconDrawable="@drawable/ic_email">
+            app:startIconDrawable="@drawable/ic_email_new">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextTextEmailAddress2"

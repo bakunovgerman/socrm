@@ -21,10 +21,13 @@
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:visibility="invisible"
         android:id="@+id/navigation"
         android:layout_width="match_parent"
-        android:layout_gravity="bottom"
         android:layout_height="wrap_content"
-        app:menu="@menu/navigation"/>
+        android:layout_gravity="bottom"
+        android:background="@color/purple_500"
+        android:visibility="invisible"
+        app:itemIconTint="@drawable/item_nav_view"
+        app:itemTextColor="@drawable/item_nav_view"
+        app:menu="@menu/navigation" />
 </LinearLayout>
