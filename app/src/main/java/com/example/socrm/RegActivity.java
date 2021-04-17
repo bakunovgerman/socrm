@@ -35,8 +35,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -59,11 +62,12 @@ public class RegActivity extends AppCompatActivity {
     // Объект подключения БД
     private DatabaseReference mDatabase;
     // Объект для облачного хранилища
-    private FirebaseStorage storage = FirebaseStorage.getInstance();
+    private FirebaseStorage storage;
+    private StorageReference storageRef;
     private boolean isErrorEmail, isErrorPassword, isErrorRepeatPassword = false;
     // REQUEST CODE
     private final int PHOTO_REQUEST = 1;
-    private Uri uri;
+    private Uri uri, uriAvatar;
     private CircleImageView avatarShop;
 
     @Override
@@ -76,7 +80,8 @@ public class RegActivity extends AppCompatActivity {
         // подключения БД
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // подключаемся к облачному хранилищу
-        StorageReference storageRef = storage.getReference();
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
 
         editTextEmail = findViewById(R.id.editTextTextEmailAddress);
         editTextPassword = findViewById(R.id.editTextTextPassword);
@@ -189,12 +194,13 @@ public class RegActivity extends AppCompatActivity {
                                                     String uid = user.getUid();
                                                     Log.d("user", "user is key is:" + uid);
                                                     // Загрузка фото в бд
-                                                    StorageReference storageRef = storage.getReference();
                                                     Uri file = Uri.fromFile(new File(uri.getPath()));
                                                     String[] extensionFile = file.getLastPathSegment().split("\\.");
+
                                                     // Загружаем инфу о магазине в БД
                                                     mDatabase.child("shops").child(uid).setValue(new Shop(editTextShopName.getEditText().getText().toString(),
                                                             editTextEmail.getEditText().getText().toString(), extensionFile[1]));
+
                                                     StorageReference riversRef = storageRef.child("images/"+uid+"/avatar_shop." + extensionFile[1]);
                                                     UploadTask uploadTask = riversRef.putFile(uri);
                                                     // отслеживание загрузки
@@ -208,9 +214,16 @@ public class RegActivity extends AppCompatActivity {
                                                         @Override
                                                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                                             Log.d("storage", "success");
-                                                            startActivity(new Intent(RegActivity.this, PersonalAccountBottomNavigation.class));
+                                                            taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                                                @Override
+                                                                public void onSuccess(Uri uri) {
+                                                                    String stringUri = uri.toString();
+                                                                    mDatabase.child("shops").child(uid).child("urlAvatar").setValue(stringUri);
+                                                                }
+                                                            });
                                                         }
                                                     });
+                                                    startActivity(new Intent(RegActivity.this, PersonalAccountBottomNavigation.class));
                                                 }
                                                 else{
                                                     Log.d("user", "user is null");

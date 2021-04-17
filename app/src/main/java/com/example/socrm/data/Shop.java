@@ -7,6 +7,7 @@ public class Shop {
     public String shop_name;
     public String email;
     public String extensionAvatar;
+    public String urlAvatar;
 
     public Shop() {
     }
@@ -15,6 +16,12 @@ public class Shop {
         this.shop_name = shop_name;
         this.email = email;
         this.extensionAvatar = extensionAvatar;
+    }
+    public Shop(String shop_name, String email, String extensionAvatar, String urlAvatar) {
+        this.shop_name = shop_name;
+        this.email = email;
+        this.extensionAvatar = extensionAvatar;
+        this.urlAvatar = urlAvatar;
     }
 
     public String getShop_name() {
@@ -27,6 +34,10 @@ public class Shop {
 
     public String getExtensionAvatar() {
         return extensionAvatar;
+    }
+
+    public String getUrlAvatar() {
+        return urlAvatar;
     }
 }
 

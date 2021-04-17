@@ -69,7 +69,6 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
                         @Override
                         public void onSuccess(Uri uri) {
                             uriAvatar = uri;
-
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
