@@ -8,6 +8,7 @@
     tools:context=".ProfileFragment">
 
     <LinearLayout
+        android:id="@+id/profile_info_layout"
         android:layout_width="340dp"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,6 +22,8 @@
             android:layout_width="130dp"
             android:layout_gravity="center"
             android:layout_marginBottom="15dp"
+            app:civ_border_color="@color/purple_500"
+            app:civ_border_width="2dp"
             android:layout_height="130dp" />
         <TextView
             android:id="@+id/shopNameTextView"
@@ -128,6 +131,43 @@
             android:fontFamily="@font/montserrat_bold"
             app:cornerRadius="10dp"
             android:text="Отмена"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:elevation="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="vertical"
+        android:background="@color/blue_my"
+        app:layout_constraintTop_toBottomOf="@id/profile_info_layout">
+
+        <ImageView
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginLeft="14dp"
+            android:src="@drawable/ic_link"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_bold"
+            android:layout_margin="14dp"
+            android:textColor="#4C4C4C"
+            android:textSize="15sp"
+            android:text="Ваша ссылка для формы оформления заказов:"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_medium"
+            android:layout_marginLeft="14dp"
+            android:textColor="#4C4C4C"
+            android:layout_marginBottom="20dp"
+            android:textSize="15sp"
+            android:text="https://socrm-online.ru/insert.php?id=FXqE66VzZ5TnQPwL9qQBmJfbbRj1"/>
 
     </LinearLayout>
     <FrameLayout

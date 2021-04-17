@@ -80,6 +80,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Uri> task) {
                             progressBar.setVisibility(View.INVISIBLE);
                             navigation.setVisibility(View.VISIBLE);
+                            loadFragment(OrdersFragment.newInstance());
                         }
                     });
                 }
