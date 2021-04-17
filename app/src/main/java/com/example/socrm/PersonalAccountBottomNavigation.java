@@ -34,7 +34,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
 
     public static Context contextOfApplication;
     private DatabaseReference mDatabase;
-    private String shopName, email, password;
+    private String shopName, email, password, linkForm;
     private Uri uriAvatar;
     private ProgressBar progressBar;
 
@@ -89,7 +89,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
 
                 }
             });
-
+            linkForm = "https://socrm-online.ru/insert.php?id=" + uid;
         }
         else{
             Log.d("photoUser", "user is null");
@@ -109,7 +109,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
                     loadFragment(ProductsFragment.newInstance());
                     return true;
                 case R.id.navigation_profile:
-                    loadFragment(ProfileFragment.newInstance(shopName, uriAvatar, email));
+                    loadFragment(ProfileFragment.newInstance(shopName, uriAvatar, email, linkForm));
                     return true;
             }
             return false;

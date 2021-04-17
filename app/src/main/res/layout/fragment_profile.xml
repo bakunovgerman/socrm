@@ -4,172 +4,217 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/ic_bg_profile"
     tools:context=".ProfileFragment">
 
-    <LinearLayout
-        android:id="@+id/profile_info_layout"
-        android:layout_width="340dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="45dp"
-        app:layout_constraintStart_toStartOf="parent"
-        android:orientation="vertical"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/userPhoto"
-            android:layout_width="130dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="15dp"
-            app:civ_border_color="@color/purple_500"
-            app:civ_border_width="2dp"
-            android:layout_height="130dp" />
-        <TextView
-            android:id="@+id/shopNameTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Shop Title"
-            android:fontFamily="@font/montserrat_bold"
-            android:textColor="@color/black"
-            android:elevation="@dimen/cardview_compat_inset_shadow"
-            android:textSize="30sp"
-            android:layout_gravity="center_horizontal"/>
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/editTextEmailAddress"
-            style="@style/inputStyle"
-            android:enabled="false"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="35dp"
-            app:endIconMode="custom"
-            app:endIconTint="@color/green_my"
-            android:layout_marginBottom="10dp"
-            app:startIconDrawable="@drawable/ic_email_new">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editTextTextEmailAddress2"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/custom_btn_profile"
-                android:fontFamily="@font/montserrat_medium"
-                android:hint="E-mail"
-                android:inputType="textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/editTextTextPassword"
-            style="@style/inputStyle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:enabled="false"
-            android:elevation="3dp"
-            app:passwordToggleEnabled="true"
-            app:startIconDrawable="@drawable/ic_password">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/custom_btn_profile"
-                android:fontFamily="@font/montserrat_medium"
-                android:hint="Пароль"
-                android:text="ggggggggg"
-                android:inputType="textPassword" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/editTextTextPasswordRepeat"
-            style="@style/inputStyle"
-            android:layout_width="match_parent"
-            android:enabled="false"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_marginBottom="10dp"
-            android:elevation="3dp"
-            app:passwordToggleEnabled="true"
-            app:startIconDrawable="@drawable/ic_password">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/custom_btn_profile"
-                android:fontFamily="@font/montserrat_medium"
-                android:hint="Повторите новый пароль"
-                android:inputType="textPassword" />
-        </com.google.android.material.textfield.TextInputLayout>
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/editBtn"
-            android:layout_width="200dp"
-            android:layout_height="55dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="6dp"
-            android:fontFamily="@font/montserrat_medium"
-            app:icon="@drawable/ic_edit"
-            app:cornerRadius="10dp"
-            android:text="Изменить"/>
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/saveBtn"
-            android:layout_width="200dp"
-            android:layout_height="47dp"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            android:fontFamily="@font/montserrat_bold"
-            app:backgroundTint="@null"
-            android:background="@drawable/custom_btn_save"
-            app:cornerRadius="10dp"
-            android:textColor="#FFFFFF"
-            android:layout_marginBottom="20dp"
-            android:text="Сохранить"/>
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/cancelBtn"
-            android:visibility="gone"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            app:icon="@drawable/ic_cancel"
-            android:layout_gravity="center"
-            android:backgroundTint="@color/red_my"
-            android:fontFamily="@font/montserrat_bold"
-            app:cornerRadius="10dp"
-            android:text="Отмена"/>
-    </LinearLayout>
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:elevation="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:orientation="vertical"
-        android:background="@color/blue_my"
-        app:layout_constraintTop_toBottomOf="@id/profile_info_layout">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginLeft="14dp"
-            android:src="@drawable/ic_link"/>
-
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_bold"
-            android:layout_margin="14dp"
-            android:textColor="#4C4C4C"
-            android:textSize="15sp"
-            android:text="Ваша ссылка для формы оформления заказов:"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/montserrat_medium"
-            android:layout_marginLeft="14dp"
-            android:textColor="#4C4C4C"
-            android:layout_marginBottom="20dp"
-            android:textSize="15sp"
-            android:text="https://socrm-online.ru/insert.php?id=FXqE66VzZ5TnQPwL9qQBmJfbbRj1"/>
+            android:background="@drawable/ic_bg_profile"
+            android:orientation="vertical">
+            <ImageButton
+                android:id="@+id/logoutBtn"
+                android:layout_width="27dp"
+                android:background="@drawable/ic_logout"
+                android:layout_gravity="end"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_height="27dp"/>
 
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/profile_info_layout"
+                android:layout_width="340dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="50dp"
+                android:orientation="vertical">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/userPhoto"
+                    android:layout_width="130dp"
+                    android:layout_height="130dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="15dp"
+                    app:civ_border_color="@color/purple_500"
+                    app:civ_border_width="2dp" />
+
+                <TextView
+                    android:id="@+id/shopNameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:elevation="@dimen/cardview_compat_inset_shadow"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="Shop Title"
+                    android:textColor="@color/black"
+                    android:textSize="30sp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/editTextEmailAddress"
+                    style="@style/inputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="35dp"
+                    android:layout_marginBottom="10dp"
+                    android:enabled="false"
+                    app:endIconMode="custom"
+                    app:endIconTint="@color/green_my"
+                    app:startIconDrawable="@drawable/ic_email_new">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/editTextTextEmailAddress2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/custom_btn_profile"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:hint="E-mail"
+                        android:inputType="textEmailAddress" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/editTextTextPassword"
+                    style="@style/inputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:elevation="3dp"
+                    android:enabled="false"
+                    app:passwordToggleEnabled="true"
+                    app:startIconDrawable="@drawable/ic_password">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/custom_btn_profile"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:hint="Пароль"
+                        android:inputType="textPassword"
+                        android:text="ggggggggg" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/editTextTextPasswordRepeat"
+                    style="@style/inputStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:elevation="3dp"
+                    android:enabled="false"
+                    android:visibility="gone"
+                    app:passwordToggleEnabled="true"
+                    app:startIconDrawable="@drawable/ic_password">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/custom_btn_profile"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:hint="Повторите новый пароль"
+                        android:inputType="textPassword" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/editBtn"
+                    android:layout_width="200dp"
+                    android:layout_height="55dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="6dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="Изменить"
+                    app:cornerRadius="10dp"
+                    app:icon="@drawable/ic_edit" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/saveBtn"
+                    android:layout_width="200dp"
+                    android:layout_height="47dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="20dp"
+                    android:background="@drawable/custom_btn_save"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="Сохранить"
+                    android:textColor="#FFFFFF"
+                    android:visibility="gone"
+                    app:backgroundTint="@null"
+                    app:cornerRadius="10dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/cancelBtn"
+                    android:layout_width="150dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:backgroundTint="@color/red_my"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="Отмена"
+                    android:visibility="gone"
+                    app:cornerRadius="10dp"
+                    app:icon="@drawable/ic_cancel" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:background="@color/blue_my"
+                android:elevation="2dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="14dp"
+                    android:src="@drawable/ic_link" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="25dp"
+                    android:layout_marginTop="15dp"
+                    android:fontFamily="@font/montserrat_bold"
+                    android:text="Ваша ссылка для формы оформления заказов:"
+                    android:textColor="#4C4C4C"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:id="@+id/linkTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="20dp"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="https://socrm-online.ru/insert.php?id=FXqE66VzZ5TnQPwL9qQBmJfbbRj1"
+                    android:textColor="#4C4C4C"
+                    android:textSize="15sp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/copyLink"
+                    android:layout_width="190dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="15dp"
+                    android:backgroundTint="@color/blue_my"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:text="Скопировать"
+                    android:textColor="@color/purple_500"
+                    android:textSize="12sp"
+                    app:cornerRadius="10dp"
+                    app:icon="@drawable/ic_copy"
+                    app:iconTint="@color/purple_500"
+                    app:strokeColor="@color/purple_500"
+                    app:strokeWidth="1dp" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
     <FrameLayout
         android:visibility="invisible"
         android:id="@+id/progressbar_layout"
