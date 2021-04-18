@@ -33,27 +33,22 @@
             android:textColor="@color/black"
             android:textSize="30sp" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/inputText"
-            style="@style/inputStyle"
+        <EditText
+            android:elevation="3dp"
             android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/custom_btn"
             android:layout_marginTop="20dp"
             android:layout_marginLeft="23dp"
+            android:hint="Поиск"
+            android:drawableRight="@drawable/ic_search"
+            android:paddingRight="15dp"
+            android:fontFamily="@font/montserrat_medium"
+            android:textSize="15dp"
+            android:paddingLeft="15dp"
             android:layout_marginRight="23dp"
             android:layout_marginBottom="15dp"
-            android:layout_height="45dp"
-            app:endIconMode="custom"
-            app:endIconDrawable="@drawable/ic_search">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/custom_btn"
-                android:fontFamily="@font/montserrat_medium"
-                android:hint="Поиск"
-                android:inputType="textEmailAddress" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            />
 
     </LinearLayout>
 

@@ -105,18 +105,6 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
             // строка для ссылки на форму у магазина
             linkForm = "https://socrm-online.ru/insert.php?id=" + uid;
 
-//            mDatabase.child("orders").child(uid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-//                @Override
-//                public void onComplete(@NonNull Task<DataSnapshot> task) {
-//                    if (!task.isSuccessful()) {
-//                        Toast.makeText(PersonalAccountBottomNavigation.this, "bad", Toast.LENGTH_SHORT).show();
-//                    }
-//                    else {
-//                        Order order = task.getResult().getValue(Order.class);
-//                        orders.add(order);
-//                    }
-//                }
-//            });
             mDatabase.child("orders").child(uid).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -133,8 +121,6 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
                         progressBar.setVisibility(View.INVISIBLE);
                     }
                 }
-
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
 
