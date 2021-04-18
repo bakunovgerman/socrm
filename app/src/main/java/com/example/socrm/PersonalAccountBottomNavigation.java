@@ -42,6 +42,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
     private Uri uriAvatar;
     private ProgressBar progressBar;
     private ArrayList<Order> orders;
+    private boolean avatarDownloadComplete, ordersOnDataChangeComplete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,9 +88,12 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
                     }).addOnCompleteListener(new OnCompleteListener<Uri>() {
                         @Override
                         public void onComplete(@NonNull Task<Uri> task) {
-                            progressBar.setVisibility(View.INVISIBLE);
-                            navigation.setVisibility(View.VISIBLE);
-                            loadFragment(OrdersFragment.newInstance());
+                            avatarDownloadComplete = true;
+                            if (ordersOnDataChangeComplete && avatarDownloadComplete){
+                                navigation.setVisibility(View.VISIBLE);
+                                loadFragment(OrdersFragment.newInstance(orders));
+                                progressBar.setVisibility(View.INVISIBLE);
+                            }
                         }
                     });
                 }
@@ -106,7 +110,6 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
 //                public void onComplete(@NonNull Task<DataSnapshot> task) {
 //                    if (!task.isSuccessful()) {
 //                        Toast.makeText(PersonalAccountBottomNavigation.this, "bad", Toast.LENGTH_SHORT).show();
-//                        Log.e("firebase", "Error getting data", task.getException());
 //                    }
 //                    else {
 //                        Order order = task.getResult().getValue(Order.class);
@@ -117,12 +120,20 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
             mDatabase.child("orders").child(uid).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    orders.clear();
                     for (DataSnapshot orderSnapshot : snapshot.getChildren()){
                         Order order = orderSnapshot.getValue(Order.class);
                         order.id = orderSnapshot.getKey();
                         orders.add(order);
                     }
+                    ordersOnDataChangeComplete = true;
+                    if (ordersOnDataChangeComplete && avatarDownloadComplete){
+                        navigation.setVisibility(View.VISIBLE);
+                        loadFragment(OrdersFragment.newInstance(orders));
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
                 }
+
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
@@ -141,7 +152,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_orders:
-                    loadFragment(OrdersFragment.newInstance());
+                    loadFragment(OrdersFragment.newInstance(orders));
                     return true;
                 case R.id.navigation_products:
                     loadFragment(ProductsFragment.newInstance());

@@ -11,4 +11,5 @@
     <color name="blue_my">#B8E1FF</color>
     <color name="red_my">#FF5959</color>
     <color name="bg_gray">#F6F6F6</color>
+    <color name="gray_hint_text">#C4C4C4</color>
 </resources>

@@ -11,12 +11,13 @@ public class Order {
     public String phone;
     public String product;
     public String id;
+    public String status;
 
     public Order() {
     }
 
     public Order(String address, String city, String count_product, String date, String delivery,
-                 String email, String fio, String phone, String product) {
+                 String email, String fio, String phone, String product, String status) {
         this.address = address;
         this.city = city;
         this.count_product = count_product;
@@ -26,6 +27,15 @@ public class Order {
         this.fio = fio;
         this.phone = phone;
         this.product = product;
+        this.status = status;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getStatus() {
+        return status;
     }
 
     public String getAddress() {
