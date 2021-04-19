@@ -1,10 +1,16 @@
 package com.example.socrm;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
+
+import com.example.socrm.data.Order;
 
 public class DetailOrderActivity extends AppCompatActivity {
 
@@ -13,9 +19,23 @@ public class DetailOrderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_order);
 
-        TextView textView = findViewById(R.id.textView2);
-        Intent intent = getIntent();
-        String fio = intent.getStringExtra("fio");
-        textView.setText(fio);
+        Toolbar toolbar = findViewById(R.id.toolbar_actionbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        Bundle arguments = getIntent().getExtras();
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+        Order order;
+        if(arguments!=null){
+            order = arguments.getParcelable(Order.class.getSimpleName());
+        }
     }
+
+
 }

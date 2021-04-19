@@ -30,6 +30,15 @@
         <item name="errorEnabled">true</item>
     </style>
 
+    <style name="inputStyleDetailsOrder">
+        <item name="boxStrokeErrorColor">#FF5959</item>
+        <item name="boxStrokeColor">@color/purple_500</item>
+        <item name="boxStrokeWidth">1dp</item>
+        <item name="boxStrokeWidthFocused">1dp</item>
+        <item name="boxBackgroundColor">#fff</item>
+        <item name="errorEnabled">true</item>
+    </style>
+
     <style name="CircularProgress">
         <item name="colorAccent">@color/purple_500</item>
     </style>

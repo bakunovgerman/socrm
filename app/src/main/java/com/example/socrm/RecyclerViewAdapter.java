@@ -65,7 +65,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, DetailOrderActivity.class);
-                intent.putExtra("fio",arrayList.get(i).getFio());
+                intent.putExtra(Order.class.getSimpleName(), arrayList.get(i));
                 context.startActivity(intent);
             }
         });

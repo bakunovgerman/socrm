@@ -1,6 +1,9 @@
 package com.example.socrm.data;
 
-public class Order {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Order implements Parcelable {
     public String address;
     public String city;
     public String count_product;
@@ -15,6 +18,30 @@ public class Order {
 
     public Order() {
     }
+
+    public static final Creator<Order> CREATOR = new Creator<Order>() {
+        @Override
+        public Order createFromParcel(Parcel source) {
+            String address = source.readString();
+            String city = source.readString();
+            String count_product = source.readString();
+            String date = source.readString();
+            String delivery = source.readString();
+            String email = source.readString();
+            String status = source.readString();
+            String fio = source.readString();
+            String phone = source.readString();
+            String product = source.readString();
+            String id = source.readString();
+            return new Order(address,  city,  count_product,  date,  delivery,
+                     email,  fio,  phone,  product,  status);
+        }
+
+        @Override
+        public Order[] newArray(int size) {
+            return new Order[size];
+        }
+    };
 
     public Order(String address, String city, String count_product, String date, String delivery,
                  String email, String fio, String phone, String product, String status) {
@@ -72,5 +99,25 @@ public class Order {
 
     public String getProduct() {
         return product;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(address);
+        dest.writeString(city);
+        dest.writeString(count_product);
+        dest.writeString(date);
+        dest.writeString(delivery);
+        dest.writeString(email);
+        dest.writeString(fio);
+        dest.writeString(phone);
+        dest.writeString(product);
+        dest.writeString(status);
+        dest.writeString(id);
     }
 }
