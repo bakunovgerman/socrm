@@ -25,11 +25,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public static class RecyclerViewViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView fioTextView, productTextView, countProductTextView, cityTextView, phoneNumberTextView, statusProductTextView;
+        public TextView fioTextView, productTextView, countProductTextView, cityTextView, phoneNumberTextView, statusProductTextView, orderDateTime;
         public CardView orderCardView;
 
         public RecyclerViewViewHolder(@NonNull View itemView) {
             super(itemView);
+            orderDateTime = itemView.findViewById(R.id.orderDateTime);
             fioTextView = itemView.findViewById(R.id.fioTextView);
             productTextView = itemView.findViewById(R.id.productTextView);
             countProductTextView = itemView.findViewById(R.id.countProductTextView);
@@ -85,6 +86,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         recyclerViewViewHolder.cityTextView.setText(order.getCity());
         recyclerViewViewHolder.phoneNumberTextView.setText(order.getPhone());
         recyclerViewViewHolder.statusProductTextView.setText(order.getStatus());
+        recyclerViewViewHolder.orderDateTime.setText(order.getDate());
     }
 
     @Override

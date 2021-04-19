@@ -16,6 +16,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/gradient_orders_topbar"
         android:orientation="vertical"
+        android:elevation="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -49,6 +50,33 @@
             android:layout_marginRight="23dp"
             android:layout_marginBottom="15dp"
             />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="Фильтры"
+                android:textAllCaps="false"
+                android:fontFamily="@font/montserrat_bold"
+                app:icon="@drawable/ic_filter"
+                android:textColor="@color/white"
+                android:layout_weight="1"/>
+            <com.google.android.material.button.MaterialButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:text="По времени"
+                android:textAllCaps="false"
+                android:fontFamily="@font/montserrat_bold"
+                app:icon="@drawable/ic_time"
+                android:textColor="@color/white"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

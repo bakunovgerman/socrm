@@ -184,6 +184,16 @@
                         android:textSize="15sp" />
                 </LinearLayout>
             </LinearLayout>
+            <TextView
+                android:id="@+id/orderDateTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/montserrat_medium"
+                android:textColor="@color/purple_500"
+                android:drawableLeft="@drawable/ic_calendar"
+                android:layout_marginTop="7dp"
+                android:drawablePadding="8dp"
+                android:text="17.04.2021"/>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
