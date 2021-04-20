@@ -3,6 +3,11 @@ package com.example.socrm.data;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.database.Exclude;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class Order implements Parcelable {
     public String address;
     public String city;
@@ -133,5 +138,22 @@ public class Order implements Parcelable {
         dest.writeString(product);
         dest.writeString(status);
         dest.writeString(id);
+    }
+    @Exclude
+    public Map<String, Object> toMap() {
+        HashMap<String, Object> result = new HashMap<>();
+
+        result.put("address", address);
+        result.put("city", city);
+        result.put("count_product", count_product);
+        result.put("date", date);
+        result.put("delivery", delivery);
+        result.put("email", email);
+        result.put("fio", fio);
+        result.put("phone", phone);
+        result.put("product", product);
+        result.put("status", status);
+
+        return result;
     }
 }

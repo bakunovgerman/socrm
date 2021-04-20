@@ -79,7 +79,6 @@
         </LinearLayout>
 
     </LinearLayout>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewOrders"
         android:layout_gravity="center_horizontal"

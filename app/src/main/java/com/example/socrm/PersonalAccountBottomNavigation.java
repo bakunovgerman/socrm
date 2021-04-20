@@ -4,13 +4,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -22,6 +26,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -43,6 +48,10 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
     private ProgressBar progressBar;
     private ArrayList<Order> orders;
     private boolean avatarDownloadComplete, ordersOnDataChangeComplete;
+    private BottomNavigationView navigation;
+    private String uid;
+    private LinearLayout linearLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +59,12 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
         setContentView(R.layout.activity_personal_account_bottom_navigation);
 
         progressBar = findViewById(R.id.progressBar);
-        BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         contextOfApplication = getApplicationContext();
+        linearLayout = findViewById(R.id.linearLayoutPersonal);
+        swipeRefreshLayout = findViewById(R.id.swipe);
+
 
         orders = new ArrayList<>();
         // Получаем instance авторизированного пользователя
@@ -65,7 +77,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         if (user != null) {
             // получаем инфу о пользователе чтобы потом вывести в фрагменте для профиля
-            String uid = user.getUid();
+            uid = user.getUid();
             email = user.getEmail();
             // подключение к объекту для магазинов
             mDatabase.child("shops").addValueEventListener(new ValueEventListener() {
@@ -104,28 +116,36 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
             });
             // строка для ссылки на форму у магазина
             linkForm = "https://socrm-online.ru/insert.php?id=" + uid;
-
-            mDatabase.child("orders").child(uid).addValueEventListener(new ValueEventListener() {
+            // отслеживание обновления данных о заказах в БД
+//            mDatabase.child("orders").child(uid).addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    orders.clear();
+//                    for (DataSnapshot orderSnapshot : snapshot.getChildren()){
+//                        Order order = orderSnapshot.getValue(Order.class);
+//                        order.id = orderSnapshot.getKey();
+//                        orders.add(order);
+//                    }
+//                    ordersOnDataChangeComplete = true;
+//                    if (ordersOnDataChangeComplete && avatarDownloadComplete){
+//                        navigation.setVisibility(View.VISIBLE);
+//                        loadFragment(OrdersFragment.newInstance(orders));
+//                        progressBar.setVisibility(View.INVISIBLE);
+//                    }
+//                }
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+            getOrders();
+            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    orders.clear();
-                    for (DataSnapshot orderSnapshot : snapshot.getChildren()){
-                        Order order = orderSnapshot.getValue(Order.class);
-                        order.id = orderSnapshot.getKey();
-                        orders.add(order);
-                    }
-                    ordersOnDataChangeComplete = true;
-                    if (ordersOnDataChangeComplete && avatarDownloadComplete){
-                        navigation.setVisibility(View.VISIBLE);
-                        loadFragment(OrdersFragment.newInstance(orders));
-                        progressBar.setVisibility(View.INVISIBLE);
-                    }
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
+                public void onRefresh() {
+                    getOrders();
                 }
             });
+
         }
         else{
             Log.d("photoUser", "user is null");
@@ -160,5 +180,44 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
     public static Context getContextOfApplication()
     {
         return contextOfApplication;
+    }
+
+    public void getOrders(){
+        mDatabase.child("orders").child(uid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    orders.clear();
+                    for (DataSnapshot orderSnapshot : task.getResult().getChildren()){
+                        Order order = orderSnapshot.getValue(Order.class);
+                        order.id = orderSnapshot.getKey();
+                        orders.add(order);
+                    }
+                    ordersOnDataChangeComplete = true;
+                    if (ordersOnDataChangeComplete && avatarDownloadComplete){
+                        navigation.setVisibility(View.VISIBLE);
+                        loadFragment(OrdersFragment.newInstance(orders));
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+        });
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }, 2000 );
+
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        getOrders();
     }
 }

@@ -12,14 +12,22 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.socrm.data.Order;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
 
 import java.io.Console;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DetailOrderActivity extends AppCompatActivity {
 
@@ -28,6 +36,9 @@ public class DetailOrderActivity extends AppCompatActivity {
     cityTextInputLayout, addressTextInputLayout, deliveryTextInputLayout,
     productTextInputLayout, countProductTextInputLayout, statusTextInputLayout;
     private TextView dateTextView;
+    private DatabaseReference mDatabase;
+    private FirebaseUser user;
+    private Order order;
 
     // установка drop_menu input
     @Override
@@ -52,6 +63,10 @@ public class DetailOrderActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        // создаем ссылку на БД
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        // получаем залогиненного пользователя
+        user = FirebaseAuth.getInstance().getCurrentUser();
         // инициализируем компоненты activity
         fioTextInputLayout = findViewById(R.id.fioTextInputLayout);
         phoneTextInputLayout = findViewById(R.id.phoneTextInputLayout);
@@ -72,9 +87,9 @@ public class DetailOrderActivity extends AppCompatActivity {
         });
         // получаем переданный intent из родительской activity
         Bundle arguments = getIntent().getExtras();
+        // получаем объект order из intent
+        order = arguments.getParcelable(Order.class.getSimpleName());
         if(arguments!=null){
-            // получаем объект order из intent
-            Order order = arguments.getParcelable(Order.class.getSimpleName());
             fioTextInputLayout.getEditText().setText(order.getFio());
             Log.d("fio", order.getFio());
             phoneTextInputLayout.getEditText().setText(order.getPhone());
@@ -100,7 +115,20 @@ public class DetailOrderActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if(id == R.id.save){
-            
+            Order orderUpdate = new Order(addressTextInputLayout.getEditText().getText().toString(), cityTextInputLayout.getEditText().getText().toString(),
+                    countProductTextInputLayout.getEditText().getText().toString(), dateTextView.getText().toString(),
+                    deliveryTextInputLayout.getEditText().getText().toString(), emailTextInputLayout.getEditText().getText().toString(),
+                    fioTextInputLayout.getEditText().getText().toString(), phoneTextInputLayout.getEditText().getText().toString(),
+                    productTextInputLayout.getEditText().getText().toString(), statusTextInputLayout.getEditText().getText().toString());
+            Map<String, Object> orderValues = orderUpdate.toMap();
+
+            Map<String, Object> childUpdates = new HashMap<>();
+            childUpdates.put("orders/" + user.getUid() + "/" + order.getId(), orderValues);
+
+            mDatabase.updateChildren(childUpdates);
+
+            onBackPressed();
+
         }
         return true;
     }
