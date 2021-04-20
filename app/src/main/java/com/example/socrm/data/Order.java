@@ -28,13 +28,13 @@ public class Order implements Parcelable {
             String date = source.readString();
             String delivery = source.readString();
             String email = source.readString();
-            String status = source.readString();
             String fio = source.readString();
             String phone = source.readString();
             String product = source.readString();
+            String status = source.readString();
             String id = source.readString();
             return new Order(address,  city,  count_product,  date,  delivery,
-                     email,  fio,  phone,  product,  status);
+                     email,  fio,  phone,  product,  status, id);
         }
 
         @Override
@@ -55,6 +55,20 @@ public class Order implements Parcelable {
         this.phone = phone;
         this.product = product;
         this.status = status;
+    }
+    public Order(String address, String city, String count_product, String date, String delivery,
+                 String email, String fio, String phone, String product, String status, String id) {
+        this.address = address;
+        this.city = city;
+        this.count_product = count_product;
+        this.date = date;
+        this.delivery = delivery;
+        this.email = email;
+        this.fio = fio;
+        this.phone = phone;
+        this.product = product;
+        this.status = status;
+        this.id = id;
     }
 
     public String getId() {

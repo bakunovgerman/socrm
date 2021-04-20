@@ -7,4 +7,11 @@
         <item>Почта России</item>
         <item>СДЭК</item>
     </string-array>
+
+    <string-array name="status_input">
+        <item>Открыт</item>
+        <item>Отменен</item>
+        <item>Доставлен</item>
+        <item>Выполнен</item>
+    </string-array>
 </resources>
