@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ProfileFragment">
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -78,48 +78,6 @@
                         android:fontFamily="@font/montserrat_medium"
                         android:hint="E-mail"
                         android:inputType="textEmailAddress" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/editTextTextPassword"
-                    style="@style/inputStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:elevation="3dp"
-                    android:enabled="false"
-                    app:passwordToggleEnabled="true"
-                    app:startIconDrawable="@drawable/ic_password">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/custom_btn_profile"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:hint="Пароль"
-                        android:inputType="textPassword"
-                        android:text="ggggggggg" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/editTextTextPasswordRepeat"
-                    style="@style/inputStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:elevation="3dp"
-                    android:enabled="false"
-                    android:visibility="gone"
-                    app:passwordToggleEnabled="true"
-                    app:startIconDrawable="@drawable/ic_password">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/custom_btn_profile"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:hint="Повторите новый пароль"
-                        android:inputType="textPassword" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.button.MaterialButton
@@ -215,7 +173,7 @@
                     app:strokeWidth="1dp" />
             </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <FrameLayout
         android:visibility="invisible"

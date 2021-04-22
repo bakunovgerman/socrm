@@ -211,7 +211,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
             public void run() {
                 swipeRefreshLayout.setRefreshing(false);
             }
-        }, 2000 );
+        }, 1000 );
 
     }
 

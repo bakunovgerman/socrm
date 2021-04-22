@@ -61,7 +61,7 @@ public class ProfileFragment extends Fragment {
     private Uri uriAvatar;
     private ImageButton logoutBtn;
     private FrameLayout frameLayout;
-    private TextInputLayout emailTextInputLayout, passwordTextInputLayout, passwordRepeatTextInputLayout;
+    private TextInputLayout emailTextInputLayout;
     private MaterialButton editBtn, saveBtn, cancelBtn, copyBtn;
 
     public ProfileFragment() {
@@ -97,8 +97,6 @@ public class ProfileFragment extends Fragment {
         shopNameTextView = v.findViewById(R.id.shopNameTextView);
         frameLayout = v.findViewById(R.id.progressbar_layout);
         emailTextInputLayout = v.findViewById(R.id.editTextEmailAddress);
-        passwordTextInputLayout = v.findViewById(R.id.editTextTextPassword);
-        passwordRepeatTextInputLayout = v.findViewById(R.id.editTextTextPasswordRepeat);
         saveBtn = v.findViewById(R.id.saveBtn);
         editBtn = v.findViewById(R.id.editBtn);
         cancelBtn = v.findViewById(R.id.cancelBtn);
@@ -138,11 +136,6 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 editBtn.setVisibility(View.GONE);
                 emailTextInputLayout.setEnabled(true);
-                passwordTextInputLayout.setEnabled(true);
-                passwordTextInputLayout.getEditText().setText("");
-                passwordTextInputLayout.setHint("Новый пароль");
-                passwordRepeatTextInputLayout.setEnabled(true);
-                passwordRepeatTextInputLayout.setVisibility(View.VISIBLE);
                 cancelBtn.setVisibility(View.VISIBLE);
                 saveBtn.setVisibility(View.VISIBLE);
             }
@@ -151,7 +144,6 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 cancelChange();
-                passwordTextInputLayout.getEditText().setText("ggggggg");
             }
         });
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -161,7 +153,7 @@ public class ProfileFragment extends Fragment {
                 AuthCredential credential = EmailAuthProvider
                         .getCredential("german.bakunov@gmail.com", "Gera2002");
 
-// Prompt the user to re-provide their sign-in credentials
+                // Prompt the user to re-provide their sign-in credentials
                 user.reauthenticate(credential)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -173,12 +165,15 @@ public class ProfileFragment extends Fragment {
                     if (!emailTextInputLayout.getEditText().getText().toString().equals(email)){
                         if(RegActivity.isEmailValid(emailTextInputLayout.getEditText().getText().toString())){
                             emailTextInputLayout.setError(null);
+                            frameLayout.setVisibility(View.VISIBLE);
+                            // обновление email
                             user.updateEmail(emailTextInputLayout.getEditText().getText().toString())
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
                                                 Log.d("checkChange", "User email address updated.");
+                                                cancelChangeSave();
                                             } else{
                                                 Log.d("checkChange", "User email address updated FAIL");
                                             }
@@ -188,32 +183,6 @@ public class ProfileFragment extends Fragment {
                         else{
                             emailTextInputLayout.setError("E-mail некорректный");
                         }
-                    }
-                    if (passwordTextInputLayout.getEditText().getText().toString()
-                            .equals(passwordRepeatTextInputLayout.getEditText().getText().toString())){
-                        if (RegActivity.isPasswordValid(passwordTextInputLayout.getEditText().getText().toString())){
-                            passwordTextInputLayout.setError(null);
-                            passwordRepeatTextInputLayout.setError(null);
-                            user.updatePassword(passwordTextInputLayout.getEditText().getText().toString())
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Log.d("checkChange", "User password updated.");
-                                            } else {
-                                                Log.d("checkChange", "User password updated FAIL");
-                                            }
-                                        }
-                                    });
-                            //cancelChange();
-                        }
-                        else{
-                            passwordTextInputLayout.setError("Пароль некорректный");
-                            passwordRepeatTextInputLayout.setError("Пароль некорректный");
-                        }
-                    }
-                    else {
-                        passwordRepeatTextInputLayout.setError("Пароль не совпадает");
                     }
                 } else{
                     Log.d("checkChange", "User pis null");
@@ -227,11 +196,10 @@ public class ProfileFragment extends Fragment {
     public void cancelChange(){
         editBtn.setVisibility(View.VISIBLE);
         emailTextInputLayout.setEnabled(false);
-        passwordTextInputLayout.setEnabled(false);
-        passwordRepeatTextInputLayout.setEnabled(false);
-        passwordRepeatTextInputLayout.setVisibility(View.GONE);
         cancelBtn.setVisibility(View.GONE);
         saveBtn.setVisibility(View.GONE);
-        passwordTextInputLayout.setHint("Пароль");
+    }
+    public void cancelChangeSave(){
+        startActivity(new Intent(getContext(), MainActivity.class));
     }
 }

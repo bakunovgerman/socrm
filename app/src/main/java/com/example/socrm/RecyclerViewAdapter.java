@@ -52,7 +52,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.order_item,
                 viewGroup, false);
 
-
         RecyclerViewViewHolder recyclerViewViewHolder = new RecyclerViewViewHolder(view);
         return recyclerViewViewHolder;
 
@@ -85,6 +84,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         recyclerViewViewHolder.countProductTextView.setText(order.getCount_product());
         recyclerViewViewHolder.cityTextView.setText(order.getCity());
         recyclerViewViewHolder.phoneNumberTextView.setText(order.getPhone());
+        if (order.getStatus().equals("Открыт")){
+            recyclerViewViewHolder.statusProductTextView.setTextColor(context.getResources().getColor(R.color.purple_500));
+        }
+        else if(order.getStatus().equals("Отменен")) {
+            recyclerViewViewHolder.statusProductTextView.setTextColor(context.getResources().getColor(R.color.red_my));
+        }
+        else if(order.getStatus().equals("Доставлен")) {
+            recyclerViewViewHolder.statusProductTextView.setTextColor(context.getResources().getColor(R.color.yellow_my));
+        }
         recyclerViewViewHolder.statusProductTextView.setText(order.getStatus());
         recyclerViewViewHolder.orderDateTime.setText(order.getDate());
     }
