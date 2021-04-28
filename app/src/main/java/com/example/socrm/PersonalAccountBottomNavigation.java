@@ -51,7 +51,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
     private BottomNavigationView navigation;
     private String uid;
     private LinearLayout linearLayout;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    //private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +63,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         contextOfApplication = getApplicationContext();
         linearLayout = findViewById(R.id.linearLayoutPersonal);
-        swipeRefreshLayout = findViewById(R.id.swipe);
+        //swipeRefreshLayout = findViewById(R.id.swipe);
 
 
         orders = new ArrayList<>();
@@ -139,12 +139,12 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
 //                }
 //            });
             getOrders();
-            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    getOrders();
-                }
-            });
+//            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//                @Override
+//                public void onRefresh() {
+//                    getOrders();
+//                }
+//            });
 
         }
         else{
@@ -205,13 +205,13 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
                 }
             }
         });
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        }, 1000 );
+//        new Handler().postDelayed(new Runnable() {
+//
+//            @Override
+//            public void run() {
+//                swipeRefreshLayout.setRefreshing(false);
+//            }
+//        }, 1000 );
 
     }
 
