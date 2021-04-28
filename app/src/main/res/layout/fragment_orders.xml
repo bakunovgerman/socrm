@@ -82,6 +82,4 @@
             android:paddingBottom="15dp"
             android:layout_height="match_parent"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
