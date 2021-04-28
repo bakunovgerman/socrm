@@ -79,6 +79,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewOrders"
             android:layout_width="match_parent"
+            android:paddingBottom="15dp"
             android:layout_height="match_parent"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
