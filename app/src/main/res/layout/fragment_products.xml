@@ -1,14 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/bg_gray"
     android:layout_height="match_parent"
-    tools:context=".ProductsFragment">
+    android:fitsSystemWindows="true"
+    tools:context=".OrdersFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/topbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient_orders_topbar"
+        android:elevation="3dp">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/shopNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginLeft="30dp"
+            app:layout_scrollFlags="scroll|snap"
+            android:layout_marginTop="25dp"
+            android:elevation="@dimen/cardview_compat_inset_shadow"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="Товары"
+            android:textColor="@color/black"
+            android:textSize="30sp" />
+
+        <EditText
+            android:elevation="3dp"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:background="@drawable/custom_btn"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="23dp"
+            app:layout_scrollFlags="scroll|snap"
+            android:hint="Поиск"
+            android:drawableRight="@drawable/ic_search"
+            android:paddingRight="15dp"
+            android:fontFamily="@font/montserrat_medium"
+            android:textSize="15dp"
+            android:paddingLeft="15dp"
+            android:layout_marginRight="23dp"
+            android:layout_marginBottom="15dp" />
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_width="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:layout_height="wrap_content">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewProducts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/FloatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_margin="20dp"
+        app:srcCompat="@drawable/ic_add"
+        app:backgroundTint="@color/purple_500"
+        app:layout_scrollFlags="noScroll"
+        android:layout_height="wrap_content"/>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

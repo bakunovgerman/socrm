@@ -65,7 +65,6 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
         linearLayout = findViewById(R.id.linearLayoutPersonal);
         //swipeRefreshLayout = findViewById(R.id.swipe);
 
-
         orders = new ArrayList<>();
         // Получаем instance авторизированного пользователя
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -173,6 +172,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
     // подгрузка фрагмента в FrameLayout
     private void loadFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
         ft.replace(R.id.fl_content, fragment);
         ft.commit();
     }
