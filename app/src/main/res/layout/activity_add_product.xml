@@ -48,8 +48,6 @@
                     app:layout_collapseMode="parallax"
                     app:layout_constraintRight_toRightOf="parent"
                     android:fitsSystemWindows="true"
-                    app:layout_constraintVertical_chainStyle="packed"
-                    app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintBottom_toBottomOf="parent"
                     android:src="@drawable/shadow_down_image_product"/>
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -167,6 +165,7 @@
                 android:fontFamily="@font/montserrat_bold"
                 android:text="Добавить товар"
                 android:textColor="#FFFFFF"
+                android:onClick="createProductOnClick"
                 app:backgroundTint="@null"
                 app:cornerRadius="10dp" />
         </LinearLayout>
