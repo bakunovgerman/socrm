@@ -18,4 +18,20 @@ public class Product {
         this.sale = sale;
         this.url = url;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getPrice() {
+        return price;
+    }
+
+    public int getSale() {
+        return sale;
+    }
+
+    public String getUrl() {
+        return url;
+    }
 }

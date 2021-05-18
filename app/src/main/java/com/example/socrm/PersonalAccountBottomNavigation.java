@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.socrm.data.Order;
+import com.example.socrm.data.Product;
 import com.example.socrm.data.Shop;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -47,7 +48,8 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
     private Uri uriAvatar;
     private ProgressBar progressBar;
     private ArrayList<Order> orders;
-    private boolean avatarDownloadComplete, ordersOnDataChangeComplete;
+    private ArrayList<Product> products;
+    private boolean avatarDownloadComplete, ordersOnDataChangeComplete, productsOnDataChangeComplete = false;
     private BottomNavigationView navigation;
     private String uid;
     private LinearLayout linearLayout;
@@ -66,6 +68,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
         //swipeRefreshLayout = findViewById(R.id.swipe);
 
         orders = new ArrayList<>();
+        products = new ArrayList<>();
         // Получаем instance авторизированного пользователя
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         // указание ссылок для storage firebase
@@ -138,6 +141,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
 //                }
 //            });
             getOrders();
+            getProducts();
 //            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
 //                @Override
 //                public void onRefresh() {
@@ -160,7 +164,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
                     loadFragment(OrdersFragment.newInstance(orders));
                     return true;
                 case R.id.navigation_products:
-                    loadFragment(ProductsFragment.newInstance());
+                    loadFragment(ProductsFragment.newInstance(products));
                     return true;
                 case R.id.navigation_profile:
                     loadFragment(ProfileFragment.newInstance(shopName, uriAvatar, email, linkForm));
@@ -197,7 +201,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
                         orders.add(order);
                     }
                     ordersOnDataChangeComplete = true;
-                    if (ordersOnDataChangeComplete && avatarDownloadComplete){
+                    if (ordersOnDataChangeComplete && avatarDownloadComplete && productsOnDataChangeComplete){
                         navigation.setVisibility(View.VISIBLE);
                         loadFragment(OrdersFragment.newInstance(orders));
                         progressBar.setVisibility(View.INVISIBLE);
@@ -205,14 +209,31 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
                 }
             }
         });
-//        new Handler().postDelayed(new Runnable() {
-//
-//            @Override
-//            public void run() {
-//                swipeRefreshLayout.setRefreshing(false);
-//            }
-//        }, 1000 );
+    }
 
+    public void getProducts(){
+        mDatabase.child("products").child(uid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (!task.isSuccessful()) {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+                else {
+                    products.clear();
+                    for (DataSnapshot productsSnapshot : task.getResult().getChildren()){
+                        Product product = productsSnapshot.getValue(Product.class);
+                        //product.id = productsSnapshot.getKey();
+                        products.add(product);
+                    }
+                    productsOnDataChangeComplete = true;
+                    if (ordersOnDataChangeComplete && avatarDownloadComplete && productsOnDataChangeComplete){
+                        navigation.setVisibility(View.VISIBLE);
+                        loadFragment(OrdersFragment.newInstance(orders));
+                        progressBar.setVisibility(View.INVISIBLE);
+                    }
+                }
+            }
+        });
     }
 
     @Override
