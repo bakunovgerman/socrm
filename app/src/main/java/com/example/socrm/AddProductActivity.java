@@ -70,7 +70,13 @@ public class AddProductActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setTitleTextColor(Color.BLACK);
-
+        // кнопка назад метод
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         // подключения БД
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // подключение аутентификации
@@ -184,7 +190,7 @@ public class AddProductActivity extends AppCompatActivity {
         if (switchMaterial.isChecked()){
             return new Product(nameTextInputLayout.getEditText().getText().toString().trim(),
                     Integer.parseInt(priceTextInputLayout.getEditText().getText().toString().trim()),
-                    Integer.parseInt(saleTextInputLayout.getEditText().getText().toString().trim()), uriImg);
+                    Float.parseFloat(saleTextInputLayout.getEditText().getText().toString().trim()), uriImg);
         }
         else{
             return new Product(nameTextInputLayout.getEditText().getText().toString().trim(),

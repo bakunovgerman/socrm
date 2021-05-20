@@ -6,13 +6,13 @@ import com.google.firebase.database.IgnoreExtraProperties;
 public class Product {
     public String name;
     public int price;
-    public int sale;
+    public float sale;
     public String url;
 
     public Product() {
     }
 
-    public Product(String name, int price, int sale, String url) {
+    public Product(String name, int price, float sale, String url) {
         this.name = name;
         this.price = price;
         this.sale = sale;
@@ -27,7 +27,7 @@ public class Product {
         return price;
     }
 
-    public int getSale() {
+    public float getSale() {
         return sale;
     }
 

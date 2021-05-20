@@ -53,6 +53,9 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
     private BottomNavigationView navigation;
     private String uid;
     private LinearLayout linearLayout;
+    private FirebaseUser user;
+    private FirebaseStorage storage;
+    private StorageReference rootRef;
     //private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -70,89 +73,22 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
         orders = new ArrayList<>();
         products = new ArrayList<>();
         // Получаем instance авторизированного пользователя
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        // указание ссылок для storage firebase
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference rootRef = storage.getReference();
-
-        // Получаем ссылку на БД
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // получаем инфу о пользователе чтобы потом вывести в фрагменте для профиля
             uid = user.getUid();
             email = user.getEmail();
-            // подключение к объекту для магазинов
-            mDatabase.child("shops").addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    // получаем объект класса магазина
-                    Shop shop = snapshot.child(uid).getValue(Shop.class);
-                    shopName = shop.getShop_name();
-                    // забираем ссылку на аватарку из облака чтобы потом вывести аватарку в фрагменте профиля
-                    rootRef.child("images/" + uid + "/avatar_shop." + shop.getExtensionAvatar()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            uriAvatar = uri;
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            // Handle any errors
-                        }
-                    }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Uri> task) {
-                            avatarDownloadComplete = true;
-                            if (ordersOnDataChangeComplete && avatarDownloadComplete){
-                                navigation.setVisibility(View.VISIBLE);
-                                loadFragment(OrdersFragment.newInstance(orders));
-                                progressBar.setVisibility(View.INVISIBLE);
-                            }
-                        }
-                    });
-                }
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-
-                }
-            });
-            // строка для ссылки на форму у магазина
-            linkForm = "https://socrm-online.ru/insert.php?id=" + uid;
-            // отслеживание обновления данных о заказах в БД
-//            mDatabase.child("orders").child(uid).addValueEventListener(new ValueEventListener() {
-//                @Override
-//                public void onDataChange(@NonNull DataSnapshot snapshot) {
-//                    orders.clear();
-//                    for (DataSnapshot orderSnapshot : snapshot.getChildren()){
-//                        Order order = orderSnapshot.getValue(Order.class);
-//                        order.id = orderSnapshot.getKey();
-//                        orders.add(order);
-//                    }
-//                    ordersOnDataChangeComplete = true;
-//                    if (ordersOnDataChangeComplete && avatarDownloadComplete){
-//                        navigation.setVisibility(View.VISIBLE);
-//                        loadFragment(OrdersFragment.newInstance(orders));
-//                        progressBar.setVisibility(View.INVISIBLE);
-//                    }
-//                }
-//                @Override
-//                public void onCancelled(@NonNull DatabaseError error) {
-//
-//                }
-//            });
-            getOrders();
-            getProducts();
-//            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-//                @Override
-//                public void onRefresh() {
-//                    getOrders();
-//                }
-//            });
-
-        }
-        else{
+        }else{
             Log.d("photoUser", "user is null");
         }
+        // указание ссылок для storage firebase
+        storage = FirebaseStorage.getInstance();
+        rootRef = storage.getReference();
+
+        // Получаем ссылку на БД
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        getOrders();
+
     }
     // слушатель для нажатий по BottomNavigationView
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -164,10 +100,10 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
                     loadFragment(OrdersFragment.newInstance(orders));
                     return true;
                 case R.id.navigation_products:
-                    loadFragment(ProductsFragment.newInstance(products));
+                    loadFragment(ProductsFragment.newInstance(mDatabase, uid));
                     return true;
                 case R.id.navigation_profile:
-                    loadFragment(ProfileFragment.newInstance(shopName, uriAvatar, email, linkForm));
+                    loadFragment(ProfileFragment.newInstance(mDatabase, uid));
                     return true;
             }
             return false;
@@ -176,7 +112,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
     // подгрузка фрагмента в FrameLayout
     private void loadFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+        ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         ft.replace(R.id.fl_content, fragment);
         ft.commit();
     }
@@ -201,40 +137,15 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
                         orders.add(order);
                     }
                     ordersOnDataChangeComplete = true;
-                    if (ordersOnDataChangeComplete && avatarDownloadComplete && productsOnDataChangeComplete){
-                        navigation.setVisibility(View.VISIBLE);
-                        loadFragment(OrdersFragment.newInstance(orders));
-                        progressBar.setVisibility(View.INVISIBLE);
-                    }
+                    navigation.setVisibility(View.VISIBLE);
+                    loadFragment(OrdersFragment.newInstance(orders));
+                    progressBar.setVisibility(View.INVISIBLE);
                 }
             }
         });
     }
 
-    public void getProducts(){
-        mDatabase.child("products").child(uid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    products.clear();
-                    for (DataSnapshot productsSnapshot : task.getResult().getChildren()){
-                        Product product = productsSnapshot.getValue(Product.class);
-                        //product.id = productsSnapshot.getKey();
-                        products.add(product);
-                    }
-                    productsOnDataChangeComplete = true;
-                    if (ordersOnDataChangeComplete && avatarDownloadComplete && productsOnDataChangeComplete){
-                        navigation.setVisibility(View.VISIBLE);
-                        loadFragment(OrdersFragment.newInstance(orders));
-                        progressBar.setVisibility(View.INVISIBLE);
-                    }
-                }
-            }
-        });
-    }
+
 
     @Override
     protected void onRestart() {

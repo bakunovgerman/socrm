@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_height="wrap_content" android:layout_width="match_parent">
+<com.google.android.material.card.MaterialCardView
     app:cardCornerRadius="20dp"
-    android:layout_gravity="center_horizontal"
+    android:layout_centerInParent="true"
+    android:layout_marginTop="15dp"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     android:id="@+id/productCardView"
-    android:layout_width="wrap_content" android:layout_height="wrap_content">
+    android:layout_width="175dp" android:layout_height="wrap_content">
     <LinearLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
@@ -16,7 +20,7 @@
             android:layout_height="wrap_content">
             <ImageView
                 android:id="@+id/productImageView"
-                android:layout_width="185dp"
+                android:layout_width="175dp"
                 android:layout_height="155dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
@@ -55,25 +59,40 @@
             android:layout_height="wrap_content"
             android:text="Кроссовки Nike"
             android:elevation="3dp"
+            android:maxLines="2"
             android:fontFamily="@font/montserrat_bold"
             android:textColor="@color/black"
-            android:textSize="16sp"
+            android:textSize="17sp"
             android:layout_marginTop="8dp"
             android:layout_marginLeft="11dp"/>
-        <TextView
-            android:id="@+id/priceTextView"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"    
-            android:text="5999₽"
-            android:fontFamily="@font/montserrat_regular"
-            android:elevation="3dp"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="7dp"
-            android:layout_marginLeft="11dp"/>
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
+            <TextView
+                android:id="@+id/priceTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5999₽"
+                android:fontFamily="@font/montserrat_medium"
+                android:elevation="3dp"
+                android:textColor="@color/purple_500"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="11dp"/>
+            <TextView
+                android:id="@+id/priceSaleTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5999₽"
+                android:fontFamily="@font/montserrat_medium"
+                android:elevation="3dp"
+                android:textColor="@color/red_my"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp"
+                android:layout_marginLeft="8dp"/>
+        </LinearLayout>
     </LinearLayout>
-
-
-
 </com.google.android.material.card.MaterialCardView>
+</RelativeLayout>

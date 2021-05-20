@@ -47,6 +47,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,21 +64,23 @@ public class ProfileFragment extends Fragment {
     private FrameLayout frameLayout;
     private TextInputLayout emailTextInputLayout;
     private MaterialButton editBtn, saveBtn, cancelBtn, copyBtn;
+    private DatabaseReference mDatabase;
+    private String uid;
+    private FirebaseStorage storage;
+    private StorageReference rootRef;
 
     public ProfileFragment() {
         // Required empty public constructor
     }
-
-    public static ProfileFragment newInstance(String shopName, Uri uriAvatar, String email, String linkForm) {
-        return new ProfileFragment(shopName, uriAvatar, email, linkForm);
+    public ProfileFragment(DatabaseReference mDatabase, String uid) {
+        this.mDatabase = mDatabase;
+        this.uid = uid;
+    }
+    public static ProfileFragment newInstance(DatabaseReference mDatabase, String uid) {
+        return new ProfileFragment(mDatabase, uid);
     }
 
-    public ProfileFragment(String shopName, Uri uriAvatar, String email, String linkForm) {
-        this.shopName = shopName;
-        this.uriAvatar = uriAvatar;
-        this.email = email;
-        this.linkForm = linkForm;
-    }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -102,12 +105,7 @@ public class ProfileFragment extends Fragment {
         cancelBtn = v.findViewById(R.id.cancelBtn);
         linkTextView = v.findViewById(R.id.linkTextView);
 
-        linkTextView.setText(linkForm);
-        shopNameTextView.setText(shopName);
-        emailTextInputLayout.getEditText().setText(email);
-        Glide.with(getContext()).load(uriAvatar).into(circleImageView);
-        frameLayout.setVisibility(View.GONE);
-
+        getProfile();
         copyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -201,5 +199,85 @@ public class ProfileFragment extends Fragment {
     }
     public void cancelChangeSave(){
         startActivity(new Intent(getContext(), MainActivity.class));
+    }
+    public void getProfile(){
+        // указание ссылок для storage firebase
+        storage = FirebaseStorage.getInstance();
+        rootRef = storage.getReference();
+        // подключение к объекту для магазинов
+        mDatabase.child("shops").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                // получаем объект класса магазина
+                Shop shop = snapshot.child(uid).getValue(Shop.class);
+                shopName = shop.getShop_name();
+                // забираем ссылку на аватарку из облака чтобы потом вывести аватарку в фрагменте профиля
+                rootRef.child("images/" + uid + "/avatar_shop." + shop.getExtensionAvatar()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        uriAvatar = uri;
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle any errors
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        // строка для ссылки на форму у магазина
+                        linkForm = "https://socrm-online.ru/insert.php?id=" + uid;
+
+                        linkTextView.setText(linkForm);
+                        shopNameTextView.setText(shopName);
+                        emailTextInputLayout.getEditText().setText(email);
+                        Picasso.get()
+                                .load(uriAvatar)
+                                .placeholder(R.drawable.default_image_product)
+                                .error(R.drawable.default_image_product)
+                                .fit()
+                                .centerCrop()
+                                .into(circleImageView);
+                        frameLayout.setVisibility(View.GONE);
+                    }
+                });
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        // отслеживание обновления данных о заказах в БД
+//            mDatabase.child("orders").child(uid).addValueEventListener(new ValueEventListener() {
+//                @Override
+//                public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                    orders.clear();
+//                    for (DataSnapshot orderSnapshot : snapshot.getChildren()){
+//                        Order order = orderSnapshot.getValue(Order.class);
+//                        order.id = orderSnapshot.getKey();
+//                        orders.add(order);
+//                    }
+//                    ordersOnDataChangeComplete = true;
+//                    if (ordersOnDataChangeComplete && avatarDownloadComplete){
+//                        navigation.setVisibility(View.VISIBLE);
+//                        loadFragment(OrdersFragment.newInstance(orders));
+//                        progressBar.setVisibility(View.INVISIBLE);
+//                    }
+//                }
+//                @Override
+//                public void onCancelled(@NonNull DatabaseError error) {
+//
+//                }
+//            });
+
+//            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+//                @Override
+//                public void onRefresh() {
+//                    getOrders();
+//                }
+//            });
+
+
     }
 }

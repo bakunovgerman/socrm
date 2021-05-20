@@ -113,7 +113,6 @@ public class DetailOrderActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-
         if(id == R.id.save){
             Order orderUpdate = new Order(addressTextInputLayout.getEditText().getText().toString(), cityTextInputLayout.getEditText().getText().toString(),
                     countProductTextInputLayout.getEditText().getText().toString(), dateTextView.getText().toString(),

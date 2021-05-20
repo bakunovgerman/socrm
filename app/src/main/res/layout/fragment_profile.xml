@@ -176,7 +176,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <FrameLayout
-        android:visibility="invisible"
+        android:visibility="visible"
         android:id="@+id/progressbar_layout"
         android:layout_width="match_parent"
         android:background="@color/white"
