@@ -30,8 +30,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -61,7 +63,7 @@ public class ProductsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        //setRetainInstance(true);
     }
 
     @Override
@@ -81,7 +83,29 @@ public class ProductsFragment extends Fragment {
             }
         });
         getProducts();
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                products.clear();
+                for (DataSnapshot productsSnapshot : dataSnapshot.getChildren()){
+                    Product product = productsSnapshot.getValue(Product.class);
+                    //product.id = productsSnapshot.getKey();
+                    products.add(product);
+                }
+                adapter = new ProductRecyclerViewAdapter( products, getContext());
+                layoutManager = new GridLayoutManager(getContext(), 2);
+                recyclerViewProducts.setLayoutManager(layoutManager);
+                recyclerViewProducts.setAdapter(adapter);
+                frameLayout.setVisibility(View.GONE);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                //Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            }
+        };
+        mDatabase.child("products").child(uid).addValueEventListener(postListener);
         return v;
     }
     public void getProducts(){

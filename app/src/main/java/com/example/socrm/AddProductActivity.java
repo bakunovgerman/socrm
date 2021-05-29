@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -51,6 +52,7 @@ public class AddProductActivity extends AppCompatActivity {
     private Uri uri;
     private FirebaseStorage storage;
     private StorageReference storageRef;
+    private FrameLayout progressbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,7 @@ public class AddProductActivity extends AppCompatActivity {
         saleTextInputLayout = findViewById(R.id.editTextSaleProduct);
         productImageView = findViewById(R.id.toolbarImage);
         floatingActionButton = findViewById(R.id.fab_add_product);
+        progressbar = findViewById(R.id.fl_content);
 
         uri = null;
         // установка toolbar
@@ -140,6 +143,8 @@ public class AddProductActivity extends AppCompatActivity {
                 String key = mDatabase.child("products").push().getKey();
                 if (user != null) {
                     if (uri != null){
+                        progressbar.setVisibility(View.VISIBLE);
+                        floatingActionButton.setVisibility(View.INVISIBLE);
                         Uri file = Uri.fromFile(new File(uri.getPath()));
                         String[] extensionFile = file.getLastPathSegment().split("\\.");
                         StorageReference productImgRef = storageRef.child("images/"+uid+"/product_img_"+key+"." + extensionFile[1]);
@@ -159,7 +164,12 @@ public class AddProductActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Uri uri) {
                                         Product product = createProductObject(uri.toString());
-                                        mDatabase.child("products").child(uid).child(key).setValue(product);
+                                        mDatabase.child("products").child(uid).child(key).setValue(product).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                finish();
+                                            }
+                                        });
                                     }
                                 });
                             }
