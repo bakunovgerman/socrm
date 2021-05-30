@@ -86,7 +86,7 @@ public class ProductsFragment extends Fragment {
                 startActivity(new Intent(getContext(), AddProductActivity.class));
             }
         });
-        ValueEventListener postListener = new ValueEventListener() {
+        ValueEventListener productsListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 products.clear();
@@ -118,7 +118,7 @@ public class ProductsFragment extends Fragment {
                 //Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
             }
         };
-        mDatabase.child("products").child(uid).addValueEventListener(postListener);
+        mDatabase.child("products").child(uid).addValueEventListener(productsListener);
         //getProducts();
 
         return v;

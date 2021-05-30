@@ -44,50 +44,30 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
 
     public static Context contextOfApplication;
     private DatabaseReference mDatabase;
-    private String shopName, email, password, linkForm;
-    private Uri uriAvatar;
-    private ProgressBar progressBar;
-    private ArrayList<Order> orders;
-    private ArrayList<Product> products;
-    private boolean avatarDownloadComplete, ordersOnDataChangeComplete, productsOnDataChangeComplete = false;
     private BottomNavigationView navigation;
     private String uid;
-    private LinearLayout linearLayout;
     private FirebaseUser user;
-    private FirebaseStorage storage;
-    private StorageReference rootRef;
-    //private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_account_bottom_navigation);
 
-        progressBar = findViewById(R.id.progressBar);
         navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         contextOfApplication = getApplicationContext();
-        linearLayout = findViewById(R.id.linearLayoutPersonal);
-        //swipeRefreshLayout = findViewById(R.id.swipe);
 
-        orders = new ArrayList<>();
-        products = new ArrayList<>();
         // Получаем instance авторизированного пользователя
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             // получаем инфу о пользователе чтобы потом вывести в фрагменте для профиля
             uid = user.getUid();
-            email = user.getEmail();
         }else{
             Log.d("photoUser", "user is null");
         }
-        // указание ссылок для storage firebase
-        storage = FirebaseStorage.getInstance();
-        rootRef = storage.getReference();
-
         // Получаем ссылку на БД
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        getOrders();
+        loadFragment(OrdersFragment.newInstance(mDatabase, uid));
     }
 
     // слушатель для нажатий по BottomNavigationView
@@ -97,7 +77,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_orders:
-                    loadFragment(OrdersFragment.newInstance(orders));
+                    loadFragment(OrdersFragment.newInstance(mDatabase, uid));
                     return true;
                 case R.id.navigation_products:
                     loadFragment(ProductsFragment.newInstance(mDatabase, uid));
@@ -124,28 +104,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
         return contextOfApplication;
     }
 
-    public void getOrders(){
-        mDatabase.child("orders").child(uid).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (!task.isSuccessful()) {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-                else {
-                    orders.clear();
-                    for (DataSnapshot orderSnapshot : task.getResult().getChildren()){
-                        Order order = orderSnapshot.getValue(Order.class);
-                        order.id = orderSnapshot.getKey();
-                        orders.add(order);
-                    }
-                    ordersOnDataChangeComplete = true;
-                    navigation.setVisibility(View.VISIBLE);
-                    loadFragment(OrdersFragment.newInstance(orders));
-                    progressBar.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
-    }
+
 
 
 

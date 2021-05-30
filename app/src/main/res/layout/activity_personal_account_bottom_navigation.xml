@@ -13,12 +13,6 @@
         android:layout_width="match_parent"
         android:layout_weight="1"
         android:layout_height="match_parent">
-        <ProgressBar
-            android:layout_gravity="center"
-            android:id="@+id/progressBar"
-            android:theme="@style/CircularProgress"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
@@ -27,7 +21,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/purple_500"
-        android:visibility="invisible"
         app:itemIconTint="@drawable/item_nav_view"
         app:itemTextColor="@drawable/item_nav_view"
         app:menu="@menu/navigation" />
