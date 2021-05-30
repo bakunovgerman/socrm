@@ -92,9 +92,10 @@ public class ProductsFragment extends Fragment {
                 products.clear();
                 for (DataSnapshot productsSnapshot : dataSnapshot.getChildren()){
                     Product product = productsSnapshot.getValue(Product.class);
-                    //product.id = productsSnapshot.getKey();
+                    product.id = productsSnapshot.getKey();
                     products.add(product);
                 }
+                Collections.reverse(products);
                 if (productsSize != 0 && products.size() > productsSize){
                     new Handler().postDelayed(new Runnable() {
                         @Override
@@ -104,7 +105,6 @@ public class ProductsFragment extends Fragment {
                     }, 1000);
                 }
                 else if ((productsSize = products.size()) != 0){
-                    Collections.reverse(products);
                     adapter = new ProductRecyclerViewAdapter( products, getContext());
                     layoutManager = new GridLayoutManager(getContext(), 2);
                     recyclerViewProducts.setLayoutManager(layoutManager);
@@ -112,7 +112,6 @@ public class ProductsFragment extends Fragment {
                     frameLayout.setVisibility(View.GONE);
                 }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Getting Post failed, log a message

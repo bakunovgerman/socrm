@@ -42,5 +42,14 @@
     <style name="CircularProgress">
         <item name="colorAccent">@color/purple_500</item>
     </style>
+    <style name="Theme.SwitchMaterial" parent="Theme.AppCompat.Light">
+
+        <item name="colorPrimary">@color/purple_200</item>
+
+        <item name="colorPrimaryDark">@color/purple_200</item>
+
+        <item name="colorAccent">@color/red_my</item>
+
+    </style>
 
 </resources>

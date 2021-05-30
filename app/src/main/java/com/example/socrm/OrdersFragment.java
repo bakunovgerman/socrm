@@ -36,7 +36,6 @@ public class OrdersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     public static OrdersFragment newInstance(ArrayList<Order> orders) {

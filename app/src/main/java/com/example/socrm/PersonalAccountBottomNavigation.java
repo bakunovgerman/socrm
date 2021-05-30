@@ -56,7 +56,6 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
     private FirebaseUser user;
     private FirebaseStorage storage;
     private StorageReference rootRef;
-    private int fragmentSavedInstanceState;
     //private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
@@ -73,7 +72,6 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
 
         orders = new ArrayList<>();
         products = new ArrayList<>();
-        fragmentSavedInstanceState = 0;
         // Получаем instance авторизированного пользователя
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -103,7 +101,6 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
                     return true;
                 case R.id.navigation_products:
                     loadFragment(ProductsFragment.newInstance(mDatabase, uid));
-                    fragmentSavedInstanceState = 2;
                     return true;
                 case R.id.navigation_profile:
                     loadFragment(ProfileFragment.newInstance(mDatabase, uid));
@@ -113,23 +110,6 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
         }
     };
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt("fragment", fragmentSavedInstanceState);
-        Toast.makeText(getApplicationContext(), String.valueOf(fragmentSavedInstanceState), Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-        fragmentSavedInstanceState = savedInstanceState.getInt("fragment");
-        switch (fragmentSavedInstanceState){
-            case 2:
-                loadFragment(ProductsFragment.newInstance(mDatabase, uid));
-                break;
-        }
-        super.onRestoreInstanceState(savedInstanceState);
-    }
 
     // подгрузка фрагмента в FrameLayout
     private void loadFragment(Fragment fragment) {

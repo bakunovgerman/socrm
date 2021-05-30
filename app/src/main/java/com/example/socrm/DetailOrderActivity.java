@@ -89,19 +89,17 @@ public class DetailOrderActivity extends AppCompatActivity {
         Bundle arguments = getIntent().getExtras();
         // получаем объект order из intent
         order = arguments.getParcelable(Order.class.getSimpleName());
-        if(arguments!=null){
-            fioTextInputLayout.getEditText().setText(order.getFio());
-            Log.d("fio", order.getFio());
-            phoneTextInputLayout.getEditText().setText(order.getPhone());
-            emailTextInputLayout.getEditText().setText(order.getEmail());
-            cityTextInputLayout.getEditText().setText(order.getCity());
-            addressTextInputLayout.getEditText().setText(order.getAddress());
-            deliveryTextInputLayout.getEditText().setText(order.getDelivery());
-            productTextInputLayout.getEditText().setText(order.getProduct());
-            countProductTextInputLayout.getEditText().setText(order.getCount_product());
-            dateTextView.setText(order.getDate());
-            statusTextInputLayout.getEditText().setText(order.getStatus());
-        }
+
+        fioTextInputLayout.getEditText().setText(order.getFio());
+        phoneTextInputLayout.getEditText().setText(order.getPhone());
+        emailTextInputLayout.getEditText().setText(order.getEmail());
+        cityTextInputLayout.getEditText().setText(order.getCity());
+        addressTextInputLayout.getEditText().setText(order.getAddress());
+        deliveryTextInputLayout.getEditText().setText(order.getDelivery());
+        productTextInputLayout.getEditText().setText(order.getProduct());
+        countProductTextInputLayout.getEditText().setText(order.getCount_product());
+        dateTextView.setText(order.getDate());
+        statusTextInputLayout.getEditText().setText(order.getStatus());
     }
 
     @Override

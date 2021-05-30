@@ -12,14 +12,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.socrm.data.Order;
 import com.example.socrm.data.Product;
-import com.example.socrm.db.RealTimeDatabase;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -27,21 +29,29 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-public class AddProductActivity extends AppCompatActivity {
+public class DetailProductActivity extends AppCompatActivity {
 
     private FloatingActionButton floatingActionButton;
     private SwitchMaterial switchMaterial;
     private TextInputLayout nameTextInputLayout, priceTextInputLayout,saleTextInputLayout;
     private ImageView productImageView;
+    private Product product;
     // Объект подключения БД
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
@@ -57,8 +67,13 @@ public class AddProductActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_product);
+        setContentView(R.layout.activity_detail_product);
 
+        // создаем ссылку на БД
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        // получаем залогиненного пользователя
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        // инициализируем компоненты activity
         nameTextInputLayout = findViewById(R.id.editTextNameProduct);
         priceTextInputLayout = findViewById(R.id.editTextPriceProduct);
         saleTextInputLayout = findViewById(R.id.editTextSaleProduct);
@@ -80,6 +95,7 @@ public class AddProductActivity extends AppCompatActivity {
                 finish();
             }
         });
+
         // подключения БД
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // подключение аутентификации
@@ -104,6 +120,26 @@ public class AddProductActivity extends AppCompatActivity {
                 }
             }
         });
+        // устанавливаем тектовые значение EditText с информацией о товаре
+        // получаем переданный intent из родительской activity
+        Bundle arguments = getIntent().getExtras();
+        // получаем объект order из intent
+        product = arguments.getParcelable(Product.class.getSimpleName());
+
+        nameTextInputLayout.getEditText().setText(product.getName());
+        priceTextInputLayout.getEditText().setText(String.valueOf(product.getPrice()));
+        if (product.getSale() != 0){
+            switchMaterial.setChecked(true);
+            saleTextInputLayout.setEnabled(true);
+            saleTextInputLayout.getEditText().setText(String.valueOf((int)product.getSale()));
+        }
+        Picasso.get()
+                .load(product.getUrl())
+                .placeholder(R.drawable.default_image_product)
+                .error(R.drawable.default_image_product)
+                .fit()
+                .centerCrop()
+                .into(productImageView);
 
     }
     // метод выбора изображения
@@ -128,7 +164,7 @@ public class AddProductActivity extends AppCompatActivity {
         }
     }
     // метод создания товара
-    public void createProductOnClick(View view) {
+    public void updateProductOnClick(View view) {
         // проверка валидации введенных данных о товаре
         if (!nameTextInputLayout.getEditText().getText().toString().isEmpty()){
             nameTextInputLayout.setError(null);
@@ -168,21 +204,24 @@ public class AddProductActivity extends AppCompatActivity {
                                 taskSnapshot.getMetadata().getReference().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                                     @Override
                                     public void onSuccess(Uri uri) {
-                                        Product product = createProductObject(uri.toString());
-                                        mDatabase.child("products").child(uid).child(key).setValue(product).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void unused) {
-                                                finish();
-                                            }
-                                        });
+                                        Product productUpdate = createProductObject(uri.toString());
+                                        Map<String, Object> productValues = productUpdate.toMap();
+                                        Map<String, Object> childUpdates = new HashMap<>();
+                                        childUpdates.put("products/" + user.getUid() + "/" + product.getId(), productValues);
+                                        mDatabase.updateChildren(childUpdates);
+                                        finish();
                                     }
                                 });
                             }
                         });
                     } else {
                         // создания товара с дефолтным изображением
-                        Product product = createProductObject("default");
-                        mDatabase.child("products").child(uid).child(key).setValue(product);
+                        Product productUpdate = createProductObject(product.getUrl());
+                        Map<String, Object> productValues = productUpdate.toMap();
+                        Map<String, Object> childUpdates = new HashMap<>();
+                        childUpdates.put("products/" + user.getUid() + "/" + product.getId(), productValues);
+                        mDatabase.updateChildren(childUpdates);
+                        finish();
                     }
                 }
                 else {
@@ -212,5 +251,20 @@ public class AddProductActivity extends AppCompatActivity {
             return new Product(nameTextInputLayout.getEditText().getText().toString().trim(),
                     Integer.parseInt(priceTextInputLayout.getEditText().getText().toString().trim()),0, uriImg);
         }
+    }
+
+    public void deleteProductOnClick(View view) {
+        mDatabase.child("products").child(user.getUid()).child(product.getId()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                dataSnapshot.getRef().removeValue();
+                finish();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 }

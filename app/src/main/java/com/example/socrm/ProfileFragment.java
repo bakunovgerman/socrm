@@ -104,7 +104,7 @@ public class ProfileFragment extends Fragment {
         editBtn = v.findViewById(R.id.editBtn);
         cancelBtn = v.findViewById(R.id.cancelBtn);
         linkTextView = v.findViewById(R.id.linkTextView);
-
+        // получаем данные о профиле пользователя
         getProfile();
         copyBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +120,7 @@ public class ProfileFragment extends Fragment {
                 snackbar.show();
             }
         });
-
+        // клик-метод выхода из аккаунта
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,7 +128,7 @@ public class ProfileFragment extends Fragment {
                 startActivity(new Intent(getContext(), MainActivity.class));
             }
         });
-
+        // клик-метод включения редактирования профиля пользователя
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,12 +138,14 @@ public class ProfileFragment extends Fragment {
                 saveBtn.setVisibility(View.VISIBLE);
             }
         });
+        // клик-метод отмены редактирования профиля пользователя
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cancelChange();
             }
         });
+        // клик-метод сохранения редактирования профиля пользователя
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -200,6 +202,7 @@ public class ProfileFragment extends Fragment {
     public void cancelChangeSave(){
         startActivity(new Intent(getContext(), MainActivity.class));
     }
+    // Метод получения данные о профиле пользователя
     public void getProfile(){
         // указание ссылок для storage firebase
         storage = FirebaseStorage.getInstance();
