@@ -16,11 +16,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.example.socrm.data.Order;
 import com.example.socrm.data.Product;
@@ -36,6 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ProductsFragment extends Fragment {
 
@@ -48,6 +51,7 @@ public class ProductsFragment extends Fragment {
     private FirebaseUser user;
     private DatabaseReference mDatabase;
     private String uid;
+    private int productsSize = 0;
 
     public ProductsFragment() {
         // Required empty public constructor
@@ -82,7 +86,6 @@ public class ProductsFragment extends Fragment {
                 startActivity(new Intent(getContext(), AddProductActivity.class));
             }
         });
-        getProducts();
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -92,11 +95,22 @@ public class ProductsFragment extends Fragment {
                     //product.id = productsSnapshot.getKey();
                     products.add(product);
                 }
-                adapter = new ProductRecyclerViewAdapter( products, getContext());
-                layoutManager = new GridLayoutManager(getContext(), 2);
-                recyclerViewProducts.setLayoutManager(layoutManager);
-                recyclerViewProducts.setAdapter(adapter);
-                frameLayout.setVisibility(View.GONE);
+                if (productsSize != 0 && products.size() > productsSize){
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyItemInserted(0);
+                        }
+                    }, 1000);
+                }
+                else if ((productsSize = products.size()) != 0){
+                    Collections.reverse(products);
+                    adapter = new ProductRecyclerViewAdapter( products, getContext());
+                    layoutManager = new GridLayoutManager(getContext(), 2);
+                    recyclerViewProducts.setLayoutManager(layoutManager);
+                    recyclerViewProducts.setAdapter(adapter);
+                    frameLayout.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -106,6 +120,8 @@ public class ProductsFragment extends Fragment {
             }
         };
         mDatabase.child("products").child(uid).addValueEventListener(postListener);
+        //getProducts();
+
         return v;
     }
     public void getProducts(){
@@ -122,6 +138,7 @@ public class ProductsFragment extends Fragment {
                         //product.id = productsSnapshot.getKey();
                         products.add(product);
                     }
+                    Collections.reverse(products);
                     adapter = new ProductRecyclerViewAdapter( products, getContext());
                     layoutManager = new GridLayoutManager(getContext(), 2);
                     recyclerViewProducts.setLayoutManager(layoutManager);
