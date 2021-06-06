@@ -14,15 +14,26 @@
         android:layout_weight="1"
         android:layout_height="match_parent">
     </FrameLayout>
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/navigation"
+    <net.cachapa.expandablelayout.ExpandableLayout
+        android:id="@+id/expandable_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@color/purple_500"
-        app:itemIconTint="@drawable/item_nav_view"
-        app:itemTextColor="@drawable/item_nav_view"
-        app:menu="@menu/navigation" />
+        app:el_duration="1000"
+        app:el_expanded="true"
+        app:el_parallax="0.5">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@color/purple_500"
+            app:itemIconTint="@drawable/item_nav_view"
+            app:itemTextColor="@drawable/item_nav_view"
+            app:menu="@menu/navigation" />
+
+    </net.cachapa.expandablelayout.ExpandableLayout>
+
 
 
 </LinearLayout>

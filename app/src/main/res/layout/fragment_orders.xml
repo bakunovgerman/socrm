@@ -30,6 +30,7 @@
             android:textSize="30sp" />
 
         <EditText
+            android:id="@+id/searchOrdersEditText"
             android:elevation="3dp"
             android:layout_width="match_parent"
             android:layout_height="45dp"
@@ -37,7 +38,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginLeft="23dp"
             app:layout_scrollFlags="scroll|snap"
-            android:hint="Поиск"
+            android:hint="Поиск по ФИО"
             android:drawableRight="@drawable/ic_search"
             android:paddingRight="15dp"
             android:fontFamily="@font/montserrat_medium"

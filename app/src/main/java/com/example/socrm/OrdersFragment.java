@@ -10,13 +10,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.socrm.data.Order;
@@ -36,12 +41,14 @@ import java.util.Collections;
 public class OrdersFragment extends Fragment {
 
     private ArrayList<Order> orders;
+    private ArrayList<Order> ordersFind;
     private RecyclerView recyclerViewOrders;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private DatabaseReference mDatabase;
     private String uid;
     private FrameLayout progressBar;
+    private EditText searchOrderEditText;
     private RadioButton newOrderRadioButton, oldOrderRadioButton;
     private Boolean newOrderRadioButtonIsChecked, oldOrderRadioButtonIsChecked;
     private int ordersSize = 0;
@@ -71,8 +78,10 @@ public class OrdersFragment extends Fragment {
 
         progressBar = v.findViewById(R.id.progressbar_layout);
         recyclerViewOrders = v.findViewById(R.id.recyclerViewOrders);
+        searchOrderEditText = v.findViewById(R.id.searchOrdersEditText);
         MaterialButton filterTimeBtn = v.findViewById(R.id.filterTimeBtn);
         orders = new ArrayList<Order>();
+        ordersFind = new ArrayList<Order>();
 
         ValueEventListener ordersListener = new ValueEventListener() {
             @Override
@@ -150,7 +159,27 @@ public class OrdersFragment extends Fragment {
                 bottomSheetDialog.show();
             }
         });
+        searchOrderEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (!searchOrderEditText.getText().toString().equals("")){
+                    searchOrders(searchOrderEditText.getText().toString());
+                } else {
+                    adapter = new RecyclerViewAdapter(getContext(), orders);
+                    recyclerViewOrders.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
         return v;
     }
     public void getOrders(){
@@ -171,5 +200,16 @@ public class OrdersFragment extends Fragment {
                 }
             }
         });
+    }
+    private void searchOrders(String searchText){
+        ordersFind.clear();
+        for (Order order : orders)
+        {
+            if (order.getFio().contains(searchText)){
+                ordersFind.add(order);
+            }
+        }
+        adapter = new RecyclerViewAdapter(getContext(), ordersFind);
+        recyclerViewOrders.setAdapter(adapter);
     }
 }
