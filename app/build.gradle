@@ -47,4 +47,5 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-storage:6.4.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta2'
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0'
 }

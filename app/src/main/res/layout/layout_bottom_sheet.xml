@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottomSheetContainer"
+    android:orientation="vertical"
+    android:background="@drawable/bottom_sheet_bg"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <View
+        android:layout_width="70dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/sheet_btn_background"
+        android:layout_margin="10dp"
+        android:layout_height="5dp"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/shopNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="15dp"
+            android:elevation="@dimen/cardview_compat_inset_shadow"
+            android:fontFamily="@font/montserrat_bold"
+            android:text="Фильтры по времени"
+            android:textColor="@color/black"
+            android:textSize="23sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingEnd="20dp"
+            android:orientation="vertical"
+            android:paddingStart="20dp">
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_marginBottom="30dp"
+                android:layout_height="wrap_content">
+                <RadioButton
+                    android:id="@+id/newOrderRadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textSize="17sp"
+                    android:buttonTint="@color/purple_500"
+                    android:padding="10dp"
+                    android:checked="true"
+                    android:text="Сначала новые"/>
+                <RadioButton
+                    android:id="@+id/oldOrderRadioButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:checked="false"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textSize="17sp"
+                    android:buttonTint="@color/purple_500"
+                    android:padding="10dp"
+                    android:text="Сначала старые"/>
+            </RadioGroup>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

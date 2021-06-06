@@ -16,12 +16,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.example.socrm.data.Order;
 import com.example.socrm.data.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -39,6 +42,8 @@ public class OrdersFragment extends Fragment {
     private DatabaseReference mDatabase;
     private String uid;
     private FrameLayout progressBar;
+    private RadioButton newOrderRadioButton, oldOrderRadioButton;
+    private Boolean newOrderRadioButtonIsChecked, oldOrderRadioButtonIsChecked;
     private int ordersSize = 0;
 
     public OrdersFragment() {
@@ -66,6 +71,7 @@ public class OrdersFragment extends Fragment {
 
         progressBar = v.findViewById(R.id.progressbar_layout);
         recyclerViewOrders = v.findViewById(R.id.recyclerViewOrders);
+        MaterialButton filterTimeBtn = v.findViewById(R.id.filterTimeBtn);
         orders = new ArrayList<Order>();
 
         ValueEventListener ordersListener = new ValueEventListener() {
@@ -101,6 +107,49 @@ public class OrdersFragment extends Fragment {
             }
         };
         mDatabase.child("orders").child(uid).addValueEventListener(ordersListener);
+
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext(), R.style.BottomSheetDialogTheme);
+        View bottomSheetView  = LayoutInflater.from(getContext()).inflate(R.layout.layout_bottom_sheet,
+                v.findViewById(R.id.bottomSheetContainer));
+        newOrderRadioButton = bottomSheetView.findViewById(R.id.newOrderRadioButton);
+        newOrderRadioButton.setChecked(true);
+        newOrderRadioButtonIsChecked = true;
+        oldOrderRadioButton = bottomSheetView.findViewById(R.id.oldOrderRadioButton);
+        oldOrderRadioButton.setChecked(false);
+        oldOrderRadioButtonIsChecked = false;
+        filterTimeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newOrderRadioButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!newOrderRadioButtonIsChecked){
+                            newOrderRadioButton.setChecked(true);
+                            newOrderRadioButtonIsChecked = true;
+                            oldOrderRadioButtonIsChecked = false;
+                            Collections.reverse(orders);
+                            adapter.notifyDataSetChanged();
+                        }
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+                oldOrderRadioButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!oldOrderRadioButtonIsChecked){
+                            oldOrderRadioButton.setChecked(true);
+                            newOrderRadioButtonIsChecked = false;
+                            oldOrderRadioButtonIsChecked = true;
+                            Collections.reverse(orders);
+                            adapter.notifyDataSetChanged();
+                        }
+                        bottomSheetDialog.dismiss();
+                    }
+                });
+                bottomSheetDialog.setContentView(bottomSheetView);
+                bottomSheetDialog.show();
+            }
+        });
 
         return v;
     }
