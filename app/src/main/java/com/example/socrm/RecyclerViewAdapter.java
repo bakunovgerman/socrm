@@ -15,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.socrm.data.Order;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
 
@@ -25,19 +26,19 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public static class RecyclerViewViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView fioTextView, productTextView, countProductTextView, cityTextView, phoneNumberTextView, statusProductTextView, orderDateTime;
+        public TextView fioTextView, cityTextView, phoneNumberTextView, statusProductTextView, orderDateTime;
         public CardView orderCardView;
+        public MaterialButton moreMaterialButton;
 
         public RecyclerViewViewHolder(@NonNull View itemView) {
             super(itemView);
             orderDateTime = itemView.findViewById(R.id.orderDateTime);
             fioTextView = itemView.findViewById(R.id.fioTextView);
-            productTextView = itemView.findViewById(R.id.productTextView);
-            countProductTextView = itemView.findViewById(R.id.countProductTextView);
             cityTextView = itemView.findViewById(R.id.cityTextView);
             phoneNumberTextView = itemView.findViewById(R.id.phoneNumberTextView);
             statusProductTextView = itemView.findViewById(R.id.statusProductTextView);
             orderCardView = itemView.findViewById(R.id.orderCardView);
+            moreMaterialButton = itemView.findViewById(R.id.moreMaterialButton);
         }
     }
 
@@ -80,8 +81,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         } else if (fioTrim.length == 1){
             recyclerViewViewHolder.fioTextView.setText(order.getFio());
         }
-        recyclerViewViewHolder.productTextView.setText(order.getProduct());
-        recyclerViewViewHolder.countProductTextView.setText(order.getCount_product());
         recyclerViewViewHolder.cityTextView.setText(order.getCity());
         recyclerViewViewHolder.phoneNumberTextView.setText(order.getPhone());
         if (order.getStatus().equals("Открыт")){

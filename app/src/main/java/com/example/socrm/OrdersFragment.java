@@ -205,7 +205,7 @@ public class OrdersFragment extends Fragment {
         ordersFind.clear();
         for (Order order : orders)
         {
-            if (order.getFio().contains(searchText)){
+            if (order.getFio().toLowerCase().contains(searchText.toLowerCase())){
                 ordersFind.add(order);
             }
         }

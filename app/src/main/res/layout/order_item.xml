@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <androidx.cardview.widget.CardView
-        android:layout_width="wrap_content"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:id="@+id/orderCardView"
         android:layout_marginTop="15dp"
@@ -26,7 +26,7 @@
             android:padding="15dp">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
                 android:orientation="horizontal">
@@ -55,65 +55,11 @@
                         android:textSize="15sp" />
 
                 </LinearLayout>
-
                 <LinearLayout
                     android:layout_width="110dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="15dp"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:text="Товар"
-                        android:textColor="@color/gray_hint_text"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/productTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat_bold"
-                        android:text="Коробка"
-                        android:textColor="@color/black"
-                        android:textSize="15sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat_medium"
-                        android:text="Количество"
-                        android:textColor="@color/gray_hint_text"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/countProductTextView"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat_bold"
-                        android:text="1 шт."
-                        android:textColor="@color/black"
-                        android:textSize="15sp" />
-                </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="110dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="15dp"
+                    android:layout_weight="11"
                     android:orientation="vertical">
 
                     <TextView
@@ -135,6 +81,26 @@
                         android:textSize="15sp" />
 
                 </LinearLayout>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/moreMaterialButton"
+                    android:layout_width="40dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="50dp"
+                    android:focusable="true"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    app:cornerRadius="100dp"
+                    app:icon="@drawable/ic_more"
+                    app:iconGravity="textEnd"
+                    app:iconPadding="0dp"
+                    app:iconTint="@color/black"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="110dp"
@@ -161,10 +127,37 @@
                         android:textSize="15sp" />
 
                 </LinearLayout>
-
+                <LinearLayout
+                    android:layout_width="165dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="Адрес"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="12sp" />
+                    <TextView
+                        android:id="@+id/addressNumberTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:ellipsize="end"
+                        android:text="мкр Горский, д 53"
+                        android:maxLines="1"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginRight="15dp"
                     android:orientation="vertical">
 
                     <TextView
@@ -184,17 +177,45 @@
                         android:textColor="@color/green_my"
                         android:textSize="15sp" />
                 </LinearLayout>
+                <LinearLayout
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginRight="15dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="Сумма"
+                        android:textColor="@color/gray_hint_text"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/sumNumberTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:text="3000р"
+                        android:maxLines="1"
+                        android:textColor="@color/black"
+                        android:textSize="15sp" />
+
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/orderDateTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/montserrat_medium"
+                    android:textColor="@color/purple_500"
+                    android:layout_gravity="center_vertical"
+                    android:drawableLeft="@drawable/ic_calendar"
+                    android:layout_marginTop="7dp"
+                    android:drawablePadding="8dp"
+                    android:text="17.04.2021 11:45"/>
             </LinearLayout>
-            <TextView
-                android:id="@+id/orderDateTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/montserrat_medium"
-                android:textColor="@color/purple_500"
-                android:drawableLeft="@drawable/ic_calendar"
-                android:layout_marginTop="7dp"
-                android:drawablePadding="8dp"
-                android:text="17.04.2021"/>
+
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
