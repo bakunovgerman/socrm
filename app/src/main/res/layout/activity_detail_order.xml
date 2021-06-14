@@ -218,7 +218,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_vertical"
                                 android:fontFamily="@font/montserrat_bold"
-                                android:text="Товар"
+                                android:text="Товары"
                                 android:textColor="@color/black"
                                 android:textSize="18sp" />
                         </LinearLayout>
@@ -228,37 +228,13 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical">
 
-                            <com.google.android.material.textfield.TextInputLayout
-                                android:id="@+id/productTextInputLayout"
-                                style="@style/inputStyleDetailsOrder"
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recyclerViewProductsComposition"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                app:endIconMode="custom"
-                                app:endIconTint="@color/green_my">
+                                android:layout_height="wrap_content"/>
 
-                                <com.google.android.material.textfield.TextInputEditText
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:fontFamily="@font/montserrat_medium"
-                                    android:hint="Наименование товара"
-                                    android:inputType="text" />
-                            </com.google.android.material.textfield.TextInputLayout>
 
-                            <com.google.android.material.textfield.TextInputLayout
-                                android:id="@+id/countProductTextInputLayout"
-                                style="@style/inputStyleDetailsOrder"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                app:endIconMode="custom"
-                                app:endIconTint="@color/green_my">
-
-                                <com.google.android.material.textfield.TextInputEditText
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:fontFamily="@font/montserrat_medium"
-                                    android:hint="Количество"
-                                    android:inputType="text" />
-                            </com.google.android.material.textfield.TextInputLayout>
                             <com.google.android.material.textfield.TextInputLayout
                                 android:id="@+id/statusInput"
                                 android:layout_width="match_parent"

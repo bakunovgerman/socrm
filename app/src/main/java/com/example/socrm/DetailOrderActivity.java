@@ -3,6 +3,8 @@ package com.example.socrm;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.socrm.data.Order;
+import com.example.socrm.data.OrderComposition;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -26,6 +29,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.w3c.dom.Text;
 
 import java.io.Console;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,12 +37,16 @@ public class DetailOrderActivity extends AppCompatActivity {
 
     private AutoCompleteTextView deliveryItem, statusItem;
     private TextInputLayout fioTextInputLayout, phoneTextInputLayout, emailTextInputLayout,
-    cityTextInputLayout, addressTextInputLayout, deliveryTextInputLayout,
-    productTextInputLayout, countProductTextInputLayout, statusTextInputLayout;
+    cityTextInputLayout, addressTextInputLayout, deliveryTextInputLayout,statusTextInputLayout;
     private TextView dateTextView;
     private DatabaseReference mDatabase;
     private FirebaseUser user;
     private Order order;
+    private ArrayList<OrderComposition> products;
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private String uid;
 
     // установка drop_menu input
     @Override
@@ -67,6 +75,12 @@ public class DetailOrderActivity extends AppCompatActivity {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         // получаем залогиненного пользователя
         user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // получаем инфу о пользователе чтобы потом вывести в фрагменте для профиля
+            uid = user.getUid();
+        }else{
+            Log.d("photoUser", "user is null");
+        }
         // инициализируем компоненты activity
         fioTextInputLayout = findViewById(R.id.fioTextInputLayout);
         phoneTextInputLayout = findViewById(R.id.phoneTextInputLayout);
@@ -74,10 +88,9 @@ public class DetailOrderActivity extends AppCompatActivity {
         cityTextInputLayout = findViewById(R.id.cityTextInputLayout);
         addressTextInputLayout = findViewById(R.id.addressTextInputLayout);
         deliveryTextInputLayout = findViewById(R.id.deliveryInput);
-        productTextInputLayout = findViewById(R.id.productTextInputLayout);
-        countProductTextInputLayout = findViewById(R.id.countProductTextInputLayout);
         dateTextView = findViewById(R.id.orderDateTime);
         statusTextInputLayout = findViewById(R.id.statusInput);
+        recyclerView = findViewById(R.id.recyclerViewProductsComposition);
         // кнопка назад в toolbar
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +102,7 @@ public class DetailOrderActivity extends AppCompatActivity {
         Bundle arguments = getIntent().getExtras();
         // получаем объект order из intent
         order = arguments.getParcelable(Order.class.getSimpleName());
+        products = order.getProducts();
 
         fioTextInputLayout.getEditText().setText(order.getFio());
         phoneTextInputLayout.getEditText().setText(order.getPhone());
@@ -96,10 +110,13 @@ public class DetailOrderActivity extends AppCompatActivity {
         cityTextInputLayout.getEditText().setText(order.getCity());
         addressTextInputLayout.getEditText().setText(order.getAddress());
         deliveryTextInputLayout.getEditText().setText(order.getDelivery());
-        productTextInputLayout.getEditText().setText(order.getProduct());
-        countProductTextInputLayout.getEditText().setText(order.getCount_product());
         dateTextView.setText(order.getDate());
         statusTextInputLayout.getEditText().setText(order.getStatus());
+
+        adapter = new ProductOrderCompositionRecyclerViewAdapter(products, getApplicationContext(), mDatabase, uid);
+        layoutManager = new LinearLayoutManager(getApplicationContext(), RecyclerView.HORIZONTAL, false);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(layoutManager);
     }
 
     @Override
@@ -112,19 +129,18 @@ public class DetailOrderActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if(id == R.id.save){
-            Order orderUpdate = new Order(addressTextInputLayout.getEditText().getText().toString(), cityTextInputLayout.getEditText().getText().toString(),
-                    countProductTextInputLayout.getEditText().getText().toString(), dateTextView.getText().toString(),
-                    deliveryTextInputLayout.getEditText().getText().toString(), emailTextInputLayout.getEditText().getText().toString(),
-                    fioTextInputLayout.getEditText().getText().toString(), phoneTextInputLayout.getEditText().getText().toString(),
-                    productTextInputLayout.getEditText().getText().toString(), statusTextInputLayout.getEditText().getText().toString());
-            Map<String, Object> orderValues = orderUpdate.toMap();
-
-            Map<String, Object> childUpdates = new HashMap<>();
-            childUpdates.put("orders/" + user.getUid() + "/" + order.getId(), orderValues);
-
-            mDatabase.updateChildren(childUpdates);
-
-            onBackPressed();
+//            Order orderUpdate = new Order(addressTextInputLayout.getEditText().getText().toString(), cityTextInputLayout.getEditText().getText().toString(),
+//                    dateTextView.getText().toString(), deliveryTextInputLayout.getEditText().getText().toString(), emailTextInputLayout.getEditText().getText().toString(),
+//                    fioTextInputLayout.getEditText().getText().toString(), phoneTextInputLayout.getEditText().getText().toString(),
+//                    statusTextInputLayout.getEditText().getText().toString(), );
+//            Map<String, Object> orderValues = orderUpdate.toMap();
+//
+//            Map<String, Object> childUpdates = new HashMap<>();
+//            childUpdates.put("orders/" + user.getUid() + "/" + order.getId(), orderValues);
+//
+//            mDatabase.updateChildren(childUpdates);
+//
+//            onBackPressed();
 
         }
         return true;

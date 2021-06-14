@@ -139,7 +139,7 @@
                         android:textColor="@color/gray_hint_text"
                         android:textSize="12sp" />
                     <TextView
-                        android:id="@+id/addressNumberTextView"
+                        android:id="@+id/addressTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_bold"
@@ -193,7 +193,7 @@
                         android:textSize="12sp" />
 
                     <TextView
-                        android:id="@+id/sumNumberTextView"
+                        android:id="@+id/sumTextView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/montserrat_bold"

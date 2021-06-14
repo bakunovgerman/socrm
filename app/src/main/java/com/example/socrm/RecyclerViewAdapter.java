@@ -15,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.socrm.data.Order;
+import com.example.socrm.data.OrderComposition;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.ArrayList;
@@ -23,10 +24,12 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private ArrayList<Order> arrayList;
     private Context context;
+    private int sumOrder = 0;
 
     public static class RecyclerViewViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView fioTextView, cityTextView, phoneNumberTextView, statusProductTextView, orderDateTime;
+        public TextView fioTextView, cityTextView, phoneNumberTextView, statusProductTextView,
+                orderDateTime, addressTextView, sumTextView;
         public CardView orderCardView;
         public MaterialButton moreMaterialButton;
 
@@ -39,6 +42,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             statusProductTextView = itemView.findViewById(R.id.statusProductTextView);
             orderCardView = itemView.findViewById(R.id.orderCardView);
             moreMaterialButton = itemView.findViewById(R.id.moreMaterialButton);
+            addressTextView = itemView.findViewById(R.id.addressTextView);
+            sumTextView = itemView.findViewById(R.id.sumTextView);
         }
     }
 
@@ -94,6 +99,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
         recyclerViewViewHolder.statusProductTextView.setText(order.getStatus());
         recyclerViewViewHolder.orderDateTime.setText(order.getDate());
+        recyclerViewViewHolder.addressTextView.setText(order.getAddress());
+        for (OrderComposition orderComposition : order.getProducts())
+        {
+            sumOrder += Integer.parseInt(orderComposition.getPrice_product());
+        }
+        recyclerViewViewHolder.sumTextView.setText(String.valueOf(sumOrder) + "₽");
+        // обнуляю для следующих заказов
+        sumOrder = 0;
     }
 
     @Override
