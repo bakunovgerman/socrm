@@ -8,6 +8,7 @@ import com.google.firebase.database.Exclude;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.io.Serializable;
 
 public class Order implements Parcelable {
     public String address;
@@ -90,61 +91,6 @@ public class Order implements Parcelable {
         return phone;
     }
 
-
-    protected Order(Parcel in) {
-        address = in.readString();
-        city = in.readString();
-        date = in.readString();
-        delivery = in.readString();
-        email = in.readString();
-        fio = in.readString();
-        phone = in.readString();
-        id = in.readString();
-        status = in.readString();
-        if (in.readByte() == 0x01) {
-            products = new ArrayList<OrderComposition>();
-            in.readList(products, OrderComposition.class.getClassLoader());
-        } else {
-            products = null;
-        }
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(address);
-        dest.writeString(city);
-        dest.writeString(date);
-        dest.writeString(delivery);
-        dest.writeString(email);
-        dest.writeString(fio);
-        dest.writeString(phone);
-        dest.writeString(id);
-        dest.writeString(status);
-        if (products == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeList(products);
-        }
-    }
-
-    @SuppressWarnings("unused")
-    public static final Parcelable.Creator<Order> CREATOR = new Parcelable.Creator<Order>() {
-        @Override
-        public Order createFromParcel(Parcel in) {
-            return new Order(in);
-        }
-
-        @Override
-        public Order[] newArray(int size) {
-            return new Order[size];
-        }
-    };
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
@@ -161,4 +107,49 @@ public class Order implements Parcelable {
 
         return result;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.address);
+        dest.writeString(this.city);
+        dest.writeString(this.date);
+        dest.writeString(this.delivery);
+        dest.writeString(this.email);
+        dest.writeString(this.fio);
+        dest.writeString(this.phone);
+        dest.writeString(this.id);
+        dest.writeString(this.status);
+        dest.writeList(this.products);
+    }
+
+    protected Order(Parcel in) {
+        this.address = in.readString();
+        this.city = in.readString();
+        this.date = in.readString();
+        this.delivery = in.readString();
+        this.email = in.readString();
+        this.fio = in.readString();
+        this.phone = in.readString();
+        this.id = in.readString();
+        this.status = in.readString();
+        this.products = new ArrayList<OrderComposition>();
+        in.readList(this.products, OrderComposition.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<Order> CREATOR = new Parcelable.Creator<Order>() {
+        @Override
+        public Order createFromParcel(Parcel source) {
+            return new Order(source);
+        }
+
+        @Override
+        public Order[] newArray(int size) {
+            return new Order[size];
+        }
+    };
 }

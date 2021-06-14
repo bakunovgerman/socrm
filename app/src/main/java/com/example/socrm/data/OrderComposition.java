@@ -2,9 +2,11 @@ package com.example.socrm.data;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.io.Serializable;
+
 @IgnoreExtraProperties
 
-public class OrderComposition {
+public class OrderComposition implements Serializable {
     public String count;
     public String id_product;
     public String price_product;

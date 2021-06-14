@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.socrm.data.Order;
 import com.example.socrm.data.OrderComposition;
 import com.example.socrm.data.Product;
+import com.google.android.gms.common.api.Api;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -36,6 +37,7 @@ public class ProductOrderCompositionRecyclerViewAdapter extends RecyclerView.Ada
     private String productId;
     private String nameProduct;
     private String urlImageProduct;
+    private Product product;
 
     public static class ProductRecyclerViewViewHolder extends RecyclerView.ViewHolder {
 
@@ -62,7 +64,7 @@ public class ProductOrderCompositionRecyclerViewAdapter extends RecyclerView.Ada
     @NonNull
     @Override
     public ProductRecyclerViewViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_item,
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_order_composition_item,
                 parent, false);
 
         ProductOrderCompositionRecyclerViewAdapter.ProductRecyclerViewViewHolder recyclerViewViewHolder = new ProductOrderCompositionRecyclerViewAdapter.ProductRecyclerViewViewHolder(view);
@@ -82,18 +84,28 @@ public class ProductOrderCompositionRecyclerViewAdapter extends RecyclerView.Ada
 
         OrderComposition orderComposition = arrayList.get(position);
         productId = orderComposition.getId_product();
+        mDatabase.child("products").child(uid).child(productId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                if (task.isSuccessful()) {
+                    product = task.getResult().getValue(Product.class);
+                    Picasso.get()
+                            .load(product.getUrl())
+                            .placeholder(R.drawable.default_image_product)
+                            .error(R.drawable.default_image_product)
+                            .fit()
+                            .centerCrop()
+                            .into(holder.productImageView);
 
-        Picasso.get()
-                .load(urlImageProduct)
-                .placeholder(R.drawable.default_image_product)
-                .error(R.drawable.default_image_product)
-                .fit()
-                .centerCrop()
-                .into(holder.productImageView);
-
-        holder.nameTextView.setText(nameProduct);
+                    holder.nameTextView.setText(product.getName());
+                }
+                else {
+                    Log.e("firebase", "Error getting data", task.getException());
+                }
+            }
+        });
         holder.priceTextView.setText(String.valueOf(orderComposition.getPrice_product()) + "₽");
-
+        holder.countProductTextView.setText(orderComposition.getCount() + " шт.");
     }
 
     @Override
@@ -101,24 +113,6 @@ public class ProductOrderCompositionRecyclerViewAdapter extends RecyclerView.Ada
         return arrayList.size();
     }
 
-    public void getInfoProduct(){
-        mDatabase.child("products").child(uid).child(productId).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (DataSnapshot productSnapshot : task.getResult().getChildren()){
-                        Product product = productSnapshot.getValue(Product.class);
-                        nameProduct = product.getName();
-                        urlImageProduct = product.getUrl();
-                    }
-
-                }
-                else {
-                    Log.e("firebase", "Error getting data", task.getException());
-                }
-            }
-        });
-    }
 
 
 

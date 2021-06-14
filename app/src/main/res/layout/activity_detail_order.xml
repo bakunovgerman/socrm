@@ -238,14 +238,32 @@
                             <com.google.android.material.textfield.TextInputLayout
                                 android:id="@+id/statusInput"
                                 android:layout_width="match_parent"
+                                android:layout_marginTop="20dp"
                                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
                                 android:layout_height="wrap_content"
+                                android:layout_marginBottom="20dp"
                                 android:hint="Статус заказа">
                                 <AutoCompleteTextView
                                     android:id="@+id/statusItem"
                                     android:layout_width="match_parent"
                                     android:inputType="none"
                                     android:layout_height="match_parent"/>
+                            </com.google.android.material.textfield.TextInputLayout>
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/sumTextInputLayout"
+                                style="@style/inputStyleDetailsOrder"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:endIconMode="custom"
+                                app:startIconDrawable="@drawable/ic_price_icon"
+                                app:endIconTint="@color/green_my">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:hint="Сумма"
+                                    android:inputType="text" />
                             </com.google.android.material.textfield.TextInputLayout>
                             <TextView
                                 android:layout_gravity="end"
@@ -259,7 +277,6 @@
                                 android:layout_marginTop="7dp"
                                 android:drawablePadding="8dp"
                                 android:text="17.04.2021"/>
-
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>

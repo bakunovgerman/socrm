@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.example.socrm.data.Order;
 import com.example.socrm.data.OrderComposition;
+import com.example.socrm.data.Product;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,7 +38,7 @@ public class DetailOrderActivity extends AppCompatActivity {
 
     private AutoCompleteTextView deliveryItem, statusItem;
     private TextInputLayout fioTextInputLayout, phoneTextInputLayout, emailTextInputLayout,
-    cityTextInputLayout, addressTextInputLayout, deliveryTextInputLayout,statusTextInputLayout;
+    cityTextInputLayout, addressTextInputLayout, deliveryTextInputLayout,statusTextInputLayout, sumTextInputLayout;
     private TextView dateTextView;
     private DatabaseReference mDatabase;
     private FirebaseUser user;
@@ -47,6 +48,7 @@ public class DetailOrderActivity extends AppCompatActivity {
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
     private String uid;
+    private int sum = 0;
 
     // установка drop_menu input
     @Override
@@ -90,6 +92,7 @@ public class DetailOrderActivity extends AppCompatActivity {
         deliveryTextInputLayout = findViewById(R.id.deliveryInput);
         dateTextView = findViewById(R.id.orderDateTime);
         statusTextInputLayout = findViewById(R.id.statusInput);
+        sumTextInputLayout = findViewById(R.id.sumTextInputLayout);
         recyclerView = findViewById(R.id.recyclerViewProductsComposition);
         // кнопка назад в toolbar
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -117,6 +120,11 @@ public class DetailOrderActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(getApplicationContext(), RecyclerView.HORIZONTAL, false);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(layoutManager);
+
+        for (OrderComposition orderComposition: products){
+            sum += Integer.parseInt(orderComposition.getPrice_product());
+        }
+        sumTextInputLayout.getEditText().setText(String.valueOf(sum) + "₽");
     }
 
     @Override
