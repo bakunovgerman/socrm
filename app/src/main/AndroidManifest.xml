@@ -12,10 +12,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Socrm">
-        <activity android:name=".DetailProductActivity"></activity>
+        <activity android:name=".TrackOrderActivity"></activity>
+        <activity android:name=".DetailProductActivity" />
         <activity android:name=".AddProductActivity" />
         <activity android:name=".DetailOrderActivity" />
-        <activity android:name=".PersonalAccountBottomNavigation"/>
+        <activity android:name=".PersonalAccountBottomNavigation" />
         <activity android:name=".RegActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

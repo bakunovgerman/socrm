@@ -233,27 +233,12 @@
                                 android:id="@+id/recyclerViewProductsComposition"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"/>
-
-
-                            <com.google.android.material.textfield.TextInputLayout
-                                android:id="@+id/statusInput"
-                                android:layout_width="match_parent"
-                                android:layout_marginTop="20dp"
-                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="20dp"
-                                android:hint="Статус заказа">
-                                <AutoCompleteTextView
-                                    android:id="@+id/statusItem"
-                                    android:layout_width="match_parent"
-                                    android:inputType="none"
-                                    android:layout_height="match_parent"/>
-                            </com.google.android.material.textfield.TextInputLayout>
                             <com.google.android.material.textfield.TextInputLayout
                                 android:id="@+id/sumTextInputLayout"
                                 style="@style/inputStyleDetailsOrder"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="25dp"
                                 app:endIconMode="custom"
                                 app:startIconDrawable="@drawable/ic_price_icon"
                                 app:endIconTint="@color/green_my">
@@ -265,6 +250,60 @@
                                     android:hint="Сумма"
                                     android:inputType="text" />
                             </com.google.android.material.textfield.TextInputLayout>
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/statusInput"
+                                android:layout_width="match_parent"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="20dp"
+                                android:hint="Статус заказа">
+                                <AutoCompleteTextView
+                                    android:id="@+id/statusItem"
+                                    android:layout_width="match_parent"
+                                    android:inputType="none"
+                                    android:layout_height="match_parent"/>
+                            </com.google.android.material.textfield.TextInputLayout>
+                            <net.cachapa.expandablelayout.ExpandableLayout
+                                android:id="@+id/trackCode_expandable_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:el_duration="500"
+                                app:el_expanded="false"
+                                app:el_parallax="0.5">
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/trackCodeTextInputLayout"
+                                    style="@style/inputStyleDetailsOrder"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    app:endIconMode="custom"
+                                    app:startIconDrawable="@drawable/ic_gps_icon"
+                                    app:endIconTint="@color/green_my">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:fontFamily="@font/montserrat_medium"
+                                        android:hint="Трек-код"
+                                        android:inputType="text" />
+                                </com.google.android.material.textfield.TextInputLayout>
+                            </net.cachapa.expandablelayout.ExpandableLayout>
+
+                            <net.cachapa.expandablelayout.ExpandableLayout
+                                android:id="@+id/trackOrder_expandable_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:el_duration="500"
+                                app:el_expanded="false"
+                                app:el_parallax="0.5">
+                                <com.google.android.material.button.MaterialButton
+                                    android:id="@+id/trackOrderMaterialButton"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:fontFamily="@font/montserrat_medium"
+                                    android:text="Отслеживание посылки"
+                                    app:backgroundTint="@color/purple_500" />
+                            </net.cachapa.expandablelayout.ExpandableLayout>
+
                             <TextView
                                 android:layout_gravity="end"
                                 android:id="@+id/orderDateTime"

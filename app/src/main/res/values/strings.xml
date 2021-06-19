@@ -12,6 +12,7 @@
         <item>Открыт</item>
         <item>Отменен</item>
         <item>Доставлен</item>
+        <item>Отправлен</item>
         <item>Выполнен</item>
     </string-array>
 </resources>

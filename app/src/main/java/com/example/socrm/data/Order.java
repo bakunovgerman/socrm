@@ -2,9 +2,7 @@ package com.example.socrm.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import com.google.firebase.database.Exclude;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,12 +19,13 @@ public class Order implements Parcelable {
     public String id;
     public String status;
     public ArrayList<OrderComposition> products;
+    public String trackCode;
 
     public Order() {
     }
 
     public Order(String address, String city, String date, String delivery,
-                 String email, String fio, String phone, String status, ArrayList<OrderComposition> products) {
+                 String email, String fio, String phone, String status, ArrayList<OrderComposition> products, String trackCode) {
         this.address = address;
         this.city = city;
         this.date = date;
@@ -36,9 +35,10 @@ public class Order implements Parcelable {
         this.phone = phone;
         this.status = status;
         this.products = products;
+        this.trackCode = trackCode;
     }
     public Order(String address, String city, String date, String delivery,
-                 String email, String fio, String phone, String status, ArrayList<OrderComposition> products, String id) {
+                 String email, String fio, String phone, String status, ArrayList<OrderComposition> products, String id, String trackCode) {
         this.address = address;
         this.city = city;
         this.date = date;
@@ -49,6 +49,7 @@ public class Order implements Parcelable {
         this.status = status;
         this.products = products;
         this.id = id;
+        this.trackCode = trackCode;
     }
 
     public String getId() {
@@ -91,6 +92,10 @@ public class Order implements Parcelable {
         return phone;
     }
 
+    public String getTrackCode() {
+        return trackCode;
+    }
+
     @Exclude
     public Map<String, Object> toMap() {
         HashMap<String, Object> result = new HashMap<>();
@@ -104,6 +109,7 @@ public class Order implements Parcelable {
         result.put("phone", phone);
         result.put("status", status);
         result.put("products", products);
+        result.put("trackCode", trackCode);
 
         return result;
     }
@@ -125,6 +131,7 @@ public class Order implements Parcelable {
         dest.writeString(this.id);
         dest.writeString(this.status);
         dest.writeList(this.products);
+        dest.writeString(this.trackCode);
     }
 
     protected Order(Parcel in) {
@@ -139,6 +146,7 @@ public class Order implements Parcelable {
         this.status = in.readString();
         this.products = new ArrayList<OrderComposition>();
         in.readList(this.products, OrderComposition.class.getClassLoader());
+        this.trackCode = in.readString();
     }
 
     public static final Parcelable.Creator<Order> CREATOR = new Parcelable.Creator<Order>() {
