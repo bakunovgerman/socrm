@@ -156,7 +156,7 @@ public class DetailOrderActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (start>=7)
+                if (s.length()>=7)
                     trackOrderExpandableLayout.expand();
                 else{
                     trackOrderExpandableLayout.collapse();

@@ -1,5 +1,6 @@
 package com.example.socrm.data.TrackOrder;
 
+import java.util.ArrayList;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -35,7 +36,7 @@ public class TrackOrder {
     private Boolean delivered;
     @SerializedName("events")
     @Expose
-    private List<Event> events = null;
+    private ArrayList<Event> events = null;
 
     public String getBarcode() {
         return barcode;
@@ -109,11 +110,11 @@ public class TrackOrder {
         this.delivered = delivered;
     }
 
-    public List<Event> getEvents() {
+    public ArrayList<Event> getEvents() {
         return events;
     }
 
-    public void setEvents(List<Event> events) {
+    public void setEvents(ArrayList<Event> events) {
         this.events = events;
     }
 

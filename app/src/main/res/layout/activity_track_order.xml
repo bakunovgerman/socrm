@@ -34,6 +34,7 @@
                     android:orientation="horizontal"
                     android:layout_height="wrap_content">
                     <ImageView
+                        android:id="@+id/deliveryLogoImageView"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_marginEnd="100dp"
@@ -73,6 +74,7 @@
                         app:cardCornerRadius="10dp"
                         android:layout_height="wrap_content">
                         <TextView
+                            android:id="@+id/deliveringTimeTextView"
                             android:layout_width="35dp"
                             android:layout_height="wrap_content"
                             android:padding="5dp"
@@ -80,7 +82,7 @@
                             android:textColor="@color/white"
                             android:textAlignment="center"
                             android:fontFamily="@font/montserrat_bold"
-                            android:text="11"/>
+                            android:text="15"/>
                     </androidx.cardview.widget.CardView>
 
                 </RelativeLayout>
@@ -106,6 +108,7 @@
                         app:cardCornerRadius="10dp"
                         android:layout_height="wrap_content">
                         <TextView
+                            android:id="@+id/weightTextView"
                             android:layout_width="35dp"
                             android:layout_height="wrap_content"
                             android:padding="5dp"
@@ -113,7 +116,7 @@
                             android:textColor="@color/white"
                             android:textAlignment="center"
                             android:fontFamily="@font/montserrat_bold"
-                            android:text="0.5"/>
+                            android:text="20"/>
                     </androidx.cardview.widget.CardView>
                 </RelativeLayout>
                 <View
@@ -133,13 +136,14 @@
                         android:fontFamily="@font/montserrat_medium"
                         android:text="Ориент. дата доставки"/>
                     <TextView
+                        android:id="@+id/estimatedDeliveryTextView"
                         android:layout_width="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:textAlignment="center"
                         android:fontFamily="@font/montserrat_bold"
-                        android:text="11.06.2021"/>
+                        android:text=""/>
                 </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
@@ -158,13 +162,14 @@
                         android:fontFamily="@font/montserrat_medium"
                         android:text="Срок хранения"/>
                     <TextView
+                        android:id="@+id/storageDateTextView"
                         android:layout_width="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:textAlignment="center"
                         android:fontFamily="@font/montserrat_bold"
-                        android:text="26.06.2021"/>
+                        android:text=""/>
                 </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
@@ -183,13 +188,14 @@
                         android:fontFamily="@font/montserrat_medium"
                         android:text="Получатель"/>
                     <TextView
+                        android:id="@+id/recipientTextView"
                         android:layout_width="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:textAlignment="center"
                         android:fontFamily="@font/montserrat_bold"
-                        android:text="Б.Г.А."/>
+                        android:text=""/>
                 </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
@@ -208,13 +214,14 @@
                         android:fontFamily="@font/montserrat_medium"
                         android:text="Откуда"/>
                     <TextView
+                        android:id="@+id/addressFromTextView"
                         android:layout_width="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:textAlignment="center"
                         android:fontFamily="@font/montserrat_bold"
-                        android:text="Санкт-Петербург"/>
+                        android:text=""/>
                 </RelativeLayout>
                 <View
                     android:layout_width="match_parent"
@@ -233,19 +240,76 @@
                         android:fontFamily="@font/montserrat_medium"
                         android:text="Адресовано"/>
                     <TextView
-                        android:layout_width="220dp"
+                        android:id="@+id/destinationAddressTextView"
+                        android:layout_width="200dp"
                         android:layout_alignParentEnd="true"
                         android:layout_height="wrap_content"
                         android:padding="5dp"
                         android:textAlignment="textEnd"
                         android:fontFamily="@font/montserrat_bold"
-                        android:text="Новосибирск, мрн Горский, 53"/>
+                        android:text=""/>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:background="@color/gray_hint_text"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_height="1dp"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="Отправитель"/>
+                    <TextView
+                        android:id="@+id/senderTextView"
+                        android:layout_width="200dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:maxLines="3"
+                        android:textAlignment="textEnd"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:text="АНАСТАСИЯ АЛЕКСЕЕВНА ПАЛЬЧУНОВА"/>
+                </RelativeLayout>
+                <View
+                    android:layout_width="match_parent"
+                    android:background="@color/gray_hint_text"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginBottom="10dp"
+                    android:layout_height="1dp"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/montserrat_medium"
+                        android:text="Тип отправления"/>
+                    <TextView
+                        android:id="@+id/typeTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp"
+                        android:textAlignment="textEnd"
+                        android:fontFamily="@font/montserrat_bold"
+                        android:text=""/>
                 </RelativeLayout>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewEventsTrackOrder"
             android:layout_width="match_parent"
+            android:layout_marginTop="15dp"
             android:layout_height="wrap_content"/>
     </LinearLayout>
 

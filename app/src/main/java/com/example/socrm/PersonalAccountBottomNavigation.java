@@ -71,7 +71,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
         }
         // Получаем ссылку на БД
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        loadFragment(OrdersFragment.newInstance(mDatabase, uid));
+        loadFragment(OrdersFragment.newInstance(mDatabase));
     }
 
     // слушатель для нажатий по BottomNavigationView
@@ -81,7 +81,7 @@ public class PersonalAccountBottomNavigation extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_orders:
-                    loadFragment(OrdersFragment.newInstance(mDatabase, uid));
+                    loadFragment(OrdersFragment.newInstance(mDatabase));
                     return true;
                 case R.id.navigation_products:
                     loadFragment(ProductsFragment.newInstance(mDatabase, uid));

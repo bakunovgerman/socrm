@@ -30,6 +30,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -52,14 +54,14 @@ public class OrdersFragment extends Fragment {
     private RadioButton newOrderRadioButton, oldOrderRadioButton;
     private Boolean newOrderRadioButtonIsChecked, oldOrderRadioButtonIsChecked;
     private int ordersSize = 0;
+    private FirebaseUser user;
 
     public OrdersFragment() {
         // Required empty public constructor
     }
 
-    public OrdersFragment(DatabaseReference mDatabase, String uid) {
+    public OrdersFragment(DatabaseReference mDatabase) {
         this.mDatabase = mDatabase;
-        this.uid = uid;
     }
 
     @Override
@@ -67,8 +69,8 @@ public class OrdersFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    public static OrdersFragment newInstance(DatabaseReference mDatabase, String uid) {
-        return new OrdersFragment(mDatabase, uid);
+    public static OrdersFragment newInstance(DatabaseReference mDatabase) {
+        return new OrdersFragment(mDatabase);
     }
 
     @Override
@@ -76,6 +78,14 @@ public class OrdersFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_orders, container, false);
 
+        // Получаем instance авторизированного пользователя
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            // получаем инфу о пользователе чтобы потом вывести в фрагменте для профиля
+            uid = user.getUid();
+        }else{
+            Log.d("photoUser", "user is null");
+        }
         progressBar = v.findViewById(R.id.progressbar_layout);
         recyclerViewOrders = v.findViewById(R.id.recyclerViewOrders);
         searchOrderEditText = v.findViewById(R.id.searchOrdersEditText);
@@ -83,11 +93,44 @@ public class OrdersFragment extends Fragment {
         orders = new ArrayList<Order>();
         ordersFind = new ArrayList<Order>();
 
-        ValueEventListener ordersListener = new ValueEventListener() {
+//        ValueEventListener ordersListener = new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                orders.clear();
+//                for (DataSnapshot ordersSnapshot : dataSnapshot.getChildren()){
+//                    Order order = ordersSnapshot.getValue(Order.class);
+//                    order.id = ordersSnapshot.getKey();
+//                    orders.add(order);
+//                }
+//                Collections.reverse(orders);
+//                if (ordersSize != 0 && orders.size() > ordersSize){
+//                    new Handler().postDelayed(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            adapter.notifyItemInserted(0);
+//                        }
+//                    }, 1000);
+//                }
+//                else if ((ordersSize = orders.size()) != 0){
+//                    adapter = new RecyclerViewAdapter(getContext(), orders);
+//                    layoutManager = new LinearLayoutManager(getContext());
+//                    recyclerViewOrders.setAdapter(adapter);
+//                    recyclerViewOrders.setLayoutManager(layoutManager);
+//                    progressBar.setVisibility(View.GONE);
+//                }
+//            }
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//                // Getting Post failed, log a message
+//                //Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+//            }
+//        };
+        mDatabase.child("orders").child(uid).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("onDataChange_111", "onDataChange start");
                 orders.clear();
-                for (DataSnapshot ordersSnapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot ordersSnapshot : snapshot.getChildren()){
                     Order order = ordersSnapshot.getValue(Order.class);
                     order.id = ordersSnapshot.getKey();
                     orders.add(order);
@@ -109,13 +152,12 @@ public class OrdersFragment extends Fragment {
                     progressBar.setVisibility(View.GONE);
                 }
             }
+
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                //Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
-        };
-        mDatabase.child("orders").child(uid).addValueEventListener(ordersListener);
+        });
 
         BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext(), R.style.BottomSheetDialogTheme);
         View bottomSheetView  = LayoutInflater.from(getContext()).inflate(R.layout.layout_bottom_sheet,

@@ -21,6 +21,14 @@ public class Attributes {
     @Expose
     private String destinationAddress;
 
+    @SerializedName("type")
+    @Expose
+    private String type;
+
+    @SerializedName("sender")
+    @Expose
+    private String sender;
+
     public String getAddressFrom() {
         return addressFrom;
     }
@@ -61,4 +69,19 @@ public class Attributes {
         this.destinationAddress = destinationAddress;
     }
 
+    public String getType() {
+        return type;
+    }
+
+    public String getSender() {
+        return sender;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setSender(String sender) {
+        this.sender = sender;
+    }
 }
