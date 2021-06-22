@@ -62,16 +62,6 @@ public class TrackOrderActivity extends AppCompatActivity {
                 Log.d("onResponse_getTrack", "onFailure");
             }
         });
-//        service.getCarrier(trackCode).enqueue(new Callback<List<Carrier>>() {
-//            @Override
-//            public void onResponse(Call<List<Carrier>> call, Response<List<Carrier>> response) {
-//                carriers.addAll(response.body());
-//            }
-//            @Override
-//            public void onFailure(Call<List<Carrier>> call, Throwable t) {
-//                Log.d("onResponse_log", "onFailure");
-//            }
-//        });
 
     }
 }
