@@ -21,9 +21,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.socrm.API.TrackOrderAPIService;
+import com.example.socrm.API.TrackOrderService;
 import com.example.socrm.data.Order;
 import com.example.socrm.data.OrderComposition;
 import com.example.socrm.data.Product;
+import com.example.socrm.data.TrackOrder.Carrier;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -39,7 +42,12 @@ import org.w3c.dom.Text;
 import java.io.Console;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DetailOrderActivity extends AppCompatActivity {
 
@@ -59,6 +67,8 @@ public class DetailOrderActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private String uid;
     private int sum = 0;
+    private TrackOrderAPIService trackOrderAPIService;
+    private List<Carrier> carriers;
 
     // установка drop_menu input
     @Override
@@ -108,6 +118,7 @@ public class DetailOrderActivity extends AppCompatActivity {
         trackOrderExpandableLayout = findViewById(R.id.trackOrder_expandable_layout);
         trackCodeTextInputLayout = findViewById(R.id.trackCodeTextInputLayout);
         trackOrderMaterialButton = findViewById(R.id.trackOrderMaterialButton);
+        carriers = new ArrayList<>();
         // кнопка назад в toolbar
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -185,9 +196,23 @@ public class DetailOrderActivity extends AppCompatActivity {
         trackOrderMaterialButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(DetailOrderActivity.this, TrackOrderActivity.class);
-                intent.putExtra("trackCode", order.getTrackCode());
-                startActivity(intent);
+                trackOrderAPIService = TrackOrderService.getTrackOrderService();
+                trackOrderAPIService.getCarrier(trackCodeTextInputLayout.getEditText().getText().toString()).enqueue(new Callback<List<Carrier>>() {
+                    @Override
+                    public void onResponse(Call<List<Carrier>> call, Response<List<Carrier>> response) {
+                        carriers.addAll(response.body());
+                        Intent intent = new Intent(DetailOrderActivity.this, TrackOrderActivity.class);
+                        intent.putExtra("deliveryCode", carriers.get(0).getCode());
+                        intent.putExtra("trackCode", trackCodeTextInputLayout.getEditText().getText().toString());
+                        startActivity(intent);
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Carrier>> call, Throwable t) {
+
+                    }
+                });
+
             }
         });
 
