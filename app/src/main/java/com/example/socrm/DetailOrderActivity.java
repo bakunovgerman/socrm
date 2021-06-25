@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.socrm.API.AddTrackCode;
 import com.example.socrm.API.TrackOrderAPIService;
 import com.example.socrm.API.TrackOrderService;
 import com.example.socrm.data.Order;
@@ -40,6 +42,7 @@ import net.cachapa.expandablelayout.ExpandableLayout;
 import org.w3c.dom.Text;
 
 import java.io.Console;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,7 +72,8 @@ public class DetailOrderActivity extends AppCompatActivity {
     private int sum = 0;
     private TrackOrderAPIService trackOrderAPIService;
     private List<Carrier> carriers;
-
+    private Response<AddTrackCode> response;
+    public static final String API_KEY = "88f5707236c5aa4bc83e6d4070301146";
     // установка drop_menu input
     @Override
     protected void onResume() {
@@ -197,22 +201,28 @@ public class DetailOrderActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 trackOrderAPIService = TrackOrderService.getTrackOrderService();
-                trackOrderAPIService.getCarrier(trackCodeTextInputLayout.getEditText().getText().toString()).enqueue(new Callback<List<Carrier>>() {
-                    @Override
-                    public void onResponse(Call<List<Carrier>> call, Response<List<Carrier>> response) {
-                        carriers.addAll(response.body());
-                        Intent intent = new Intent(DetailOrderActivity.this, TrackOrderActivity.class);
-                        intent.putExtra("deliveryCode", carriers.get(0).getCode());
-                        intent.putExtra("trackCode", trackCodeTextInputLayout.getEditText().getText().toString());
-                        startActivity(intent);
+                Runnable runnable = new Runnable(){
+                    public void run() {
+                        try {
+                            carriers = new ArrayList<>();
+                            carriers.addAll(trackOrderAPIService.getCarrier(trackCodeTextInputLayout.getEditText().getText().toString()).execute().body());
+                            response = trackOrderAPIService.postTrack(carriers.get(0).getCode(),
+                                    trackCodeTextInputLayout.getEditText().getText().toString(), API_KEY)
+                                    .execute();
+                            if (!response.isSuccessful()){
+                                Log.d("response.message", response.message());
+                            }
+                            Intent intent = new Intent(getApplicationContext(), TrackOrderActivity.class);
+                            intent.putExtra("deliveryCode", carriers.get(0).getCode());
+                            intent.putExtra("trackCode", trackCodeTextInputLayout.getEditText().getText().toString());
+                            startActivity(intent);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
-
-                    @Override
-                    public void onFailure(Call<List<Carrier>> call, Throwable t) {
-
-                    }
-                });
-
+                };
+                Thread thread = new Thread(runnable);
+                thread.start();
             }
         });
 

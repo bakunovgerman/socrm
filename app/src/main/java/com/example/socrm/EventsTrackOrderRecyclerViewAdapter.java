@@ -69,11 +69,7 @@ public class EventsTrackOrderRecyclerViewAdapter extends RecyclerView.Adapter<Ev
 //                context.startActivity(intent);
 //            }
 //        });
-        if (position % 2 != 0){
-            holder.eventItemLinearLayout.setBackgroundColor(Color.WHITE);
-        }
         Event event = arrayList.get(position);
-//        Boolean b = event.getDelivered();
         if (event.getDelivered() != null){
             holder.circle_event.setBackgroundResource(R.drawable.shape_circle_event_finish_item);
             holder.way1_event.setVisibility(View.INVISIBLE);
