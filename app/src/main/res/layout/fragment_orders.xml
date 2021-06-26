@@ -52,6 +52,7 @@
             app:layout_scrollFlags="scroll|enterAlways"
             android:orientation="horizontal">
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/filtersBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
@@ -79,6 +80,7 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:layout_height="wrap_content">
         <androidx.recyclerview.widget.RecyclerView
+            android:layoutAnimation="@anim/recyclerview_layout_animation"
             android:id="@+id/recyclerViewOrders"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>

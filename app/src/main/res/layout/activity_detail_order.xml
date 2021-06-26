@@ -299,7 +299,7 @@
                                     android:id="@+id/trackOrderMaterialButton"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:fontFamily="@font/montserrat_medium"
+                                    android:fontFamily="@font/montserrat_bold"
                                     android:text="Отслеживание посылки"
                                     app:backgroundTint="@color/purple_500" />
                             </net.cachapa.expandablelayout.ExpandableLayout>

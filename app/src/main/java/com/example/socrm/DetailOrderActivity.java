@@ -179,7 +179,7 @@ public class DetailOrderActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         for (OrderComposition orderComposition: products){
-            sum += Integer.parseInt(orderComposition.getPrice_product());
+            sum += Integer.parseInt(orderComposition.getPrice_product()) * Integer.parseInt(orderComposition.count);
         }
         sumTextInputLayout.getEditText().setText(String.valueOf(sum) + "₽");
         statusItem = findViewById(R.id.statusItem);

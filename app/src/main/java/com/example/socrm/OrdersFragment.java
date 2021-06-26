@@ -18,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
@@ -25,11 +27,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.socrm.data.Order;
+import com.example.socrm.data.OrderComposition;
 import com.example.socrm.data.Product;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -42,8 +46,10 @@ import java.util.Collections;
 
 public class OrdersFragment extends Fragment {
 
+    private AutoCompleteTextView deliveryItem, statusItem;
     private ArrayList<Order> orders;
     private ArrayList<Order> ordersFind;
+    private ArrayList<Order> ordersFilters;
     private RecyclerView recyclerViewOrders;
     private RecyclerView.Adapter adapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -78,6 +84,27 @@ public class OrdersFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_orders, container, false);
 
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext(), R.style.BottomSheetDialogTheme);
+        View bottomSheetView  = LayoutInflater.from(getContext()).inflate(R.layout.layout_bottom_sheet,
+                v.findViewById(R.id.bottomSheetContainer));
+        BottomSheetDialog bottomSheetFiltersDialog = new BottomSheetDialog(getContext(), R.style.BottomSheetDialogTheme);
+        View bottomSheetFiltersView  = LayoutInflater.from(getContext()).inflate(R.layout.layout_bottom_sheet_filter,
+                v.findViewById(R.id.bottomSheetFiltersContainer));
+
+        String[] delivery_array = getResources().getStringArray(R.array.delivery_input);
+        String[] status_array = getResources().getStringArray(R.array.status_input);
+        ArrayAdapter<String> arrayAdapterDelivery = new ArrayAdapter<>(getContext(), R.layout.dropdown_item, delivery_array);
+        ArrayAdapter<String> arrayAdapterStatus = new ArrayAdapter<>(getContext(), R.layout.dropdown_item, status_array);
+        deliveryItem = bottomSheetFiltersView.findViewById(R.id.deliveryItem);
+        statusItem = bottomSheetFiltersView.findViewById(R.id.statusItem);
+        deliveryItem.setAdapter(arrayAdapterDelivery);
+        statusItem.setAdapter(arrayAdapterStatus);
+        MaterialButton filtersApplyMaterialButton = bottomSheetFiltersView.findViewById(R.id.filtersApplyMaterialButton);
+        TextInputLayout startSumTextInputLayout = bottomSheetFiltersView.findViewById(R.id.startSumTextInputLayout);
+        TextInputLayout endSumTextInputLayout = bottomSheetFiltersView.findViewById(R.id.endSumTextInputLayout);
+        TextInputLayout statusTextInputLayout = bottomSheetFiltersView.findViewById(R.id.statusInput);
+        TextInputLayout deliveryTextInputLayout = bottomSheetFiltersView.findViewById(R.id.deliveryInput);
+        ordersFilters = new ArrayList<>();
         // Получаем instance авторизированного пользователя
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -90,41 +117,9 @@ public class OrdersFragment extends Fragment {
         recyclerViewOrders = v.findViewById(R.id.recyclerViewOrders);
         searchOrderEditText = v.findViewById(R.id.searchOrdersEditText);
         MaterialButton filterTimeBtn = v.findViewById(R.id.filterTimeBtn);
+        MaterialButton filters = v.findViewById(R.id.filtersBtn);
         orders = new ArrayList<Order>();
         ordersFind = new ArrayList<Order>();
-
-//        ValueEventListener ordersListener = new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                orders.clear();
-//                for (DataSnapshot ordersSnapshot : dataSnapshot.getChildren()){
-//                    Order order = ordersSnapshot.getValue(Order.class);
-//                    order.id = ordersSnapshot.getKey();
-//                    orders.add(order);
-//                }
-//                Collections.reverse(orders);
-//                if (ordersSize != 0 && orders.size() > ordersSize){
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            adapter.notifyItemInserted(0);
-//                        }
-//                    }, 1000);
-//                }
-//                else if ((ordersSize = orders.size()) != 0){
-//                    adapter = new RecyclerViewAdapter(getContext(), orders);
-//                    layoutManager = new LinearLayoutManager(getContext());
-//                    recyclerViewOrders.setAdapter(adapter);
-//                    recyclerViewOrders.setLayoutManager(layoutManager);
-//                    progressBar.setVisibility(View.GONE);
-//                }
-//            }
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                // Getting Post failed, log a message
-//                //Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-//            }
-//        };
         mDatabase.child("orders").child(uid).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -150,6 +145,7 @@ public class OrdersFragment extends Fragment {
                     recyclerViewOrders.setAdapter(adapter);
                     recyclerViewOrders.setLayoutManager(layoutManager);
                     progressBar.setVisibility(View.GONE);
+                    recyclerViewOrders.startLayoutAnimation();
                 }
             }
 
@@ -158,10 +154,6 @@ public class OrdersFragment extends Fragment {
 
             }
         });
-
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext(), R.style.BottomSheetDialogTheme);
-        View bottomSheetView  = LayoutInflater.from(getContext()).inflate(R.layout.layout_bottom_sheet,
-                v.findViewById(R.id.bottomSheetContainer));
         newOrderRadioButton = bottomSheetView.findViewById(R.id.newOrderRadioButton);
         newOrderRadioButton.setChecked(true);
         newOrderRadioButtonIsChecked = true;
@@ -195,10 +187,176 @@ public class OrdersFragment extends Fragment {
                             adapter.notifyDataSetChanged();
                         }
                         bottomSheetDialog.dismiss();
+                        recyclerViewOrders.startLayoutAnimation();
                     }
                 });
                 bottomSheetDialog.setContentView(bottomSheetView);
                 bottomSheetDialog.show();
+            }
+        });
+        filters.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                filtersApplyMaterialButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        ordersFilters.clear();
+                        ArrayList<Order> duplicateOrders = new ArrayList<>();
+                        duplicateOrders.addAll(orders);
+                        if (!startSumTextInputLayout.getEditText().getText().toString().equals("")
+                                && !endSumTextInputLayout.getEditText().getText().toString().equals("")){
+                            int startSum = Integer.parseInt(startSumTextInputLayout.getEditText().getText().toString());
+                            int endSum = Integer.parseInt(endSumTextInputLayout.getEditText().getText().toString());
+                            for (Order order: duplicateOrders){
+                                int sumOrder = 0;
+                                for (OrderComposition orderComposition : order.getProducts())
+                                {
+                                    sumOrder += Integer.parseInt(orderComposition.getPrice_product()) * Integer.parseInt(orderComposition.count);
+                                }
+
+                                if (!statusTextInputLayout.getEditText().getText().toString().equals("") && !deliveryTextInputLayout.getEditText().getText().toString().equals("")){
+                                    String status = statusTextInputLayout.getEditText().getText().toString();
+                                    String delivery = deliveryTextInputLayout.getEditText().getText().toString();
+                                    if (sumOrder>= startSum && sumOrder<=endSum && order.getStatus().equals(status)
+                                            && order.getDelivery().equals(delivery)){
+                                        ordersFilters.add(order);
+                                    }
+                                } else if (!statusTextInputLayout.getEditText().getText().toString().equals("")){
+                                    String status = statusTextInputLayout.getEditText().getText().toString();
+                                    if (sumOrder>= startSum && sumOrder<=endSum && order.getStatus().equals(status)){
+                                        ordersFilters.add(order);
+                                    }
+                                } else if (!deliveryTextInputLayout.getEditText().getText().toString().equals("")){
+                                    String delivery = deliveryTextInputLayout.getEditText().getText().toString();
+                                    if (sumOrder>= startSum && sumOrder<=endSum && order.getDelivery().equals(delivery)){
+                                        ordersFilters.add(order);
+                                    }
+                                } else if (sumOrder>= startSum && sumOrder<=endSum){
+                                    ordersFilters.add(order);
+                                }
+                            }
+                            for (Order order: ordersFilters){
+                                if (duplicateOrders.contains(order))
+                                    duplicateOrders.remove(order);
+                            }
+                        }
+                        else if (!startSumTextInputLayout.getEditText().getText().toString().equals("")){
+                            int startSum = Integer.parseInt(startSumTextInputLayout.getEditText().getText().toString());
+                            for (Order order: duplicateOrders){
+                                int sumOrder = 0;
+                                for (OrderComposition orderComposition : order.getProducts())
+                                {
+                                    sumOrder += Integer.parseInt(orderComposition.getPrice_product()) * Integer.parseInt(orderComposition.count);
+                                }
+                                if (!statusTextInputLayout.getEditText().getText().toString().equals("") && !deliveryTextInputLayout.getEditText().getText().toString().equals("")){
+                                    String status = statusTextInputLayout.getEditText().getText().toString();
+                                    String delivery = deliveryTextInputLayout.getEditText().getText().toString();
+                                    if (sumOrder>= startSum && order.getStatus().equals(status)
+                                            && order.getDelivery().equals(delivery)){
+                                        ordersFilters.add(order);
+                                    }
+                                } else if (!statusTextInputLayout.getEditText().getText().toString().equals("")){
+                                    String status = statusTextInputLayout.getEditText().getText().toString();
+                                    if (sumOrder>= startSum && order.getStatus().equals(status)){
+                                        ordersFilters.add(order);
+                                    }
+                                } else if (!deliveryTextInputLayout.getEditText().getText().toString().equals("")){
+                                    String delivery = deliveryTextInputLayout.getEditText().getText().toString();
+                                    if (sumOrder>= startSum && order.getDelivery().equals(delivery)){
+                                        ordersFilters.add(order);
+                                    }
+                                } else if (sumOrder>= startSum){
+                                    ordersFilters.add(order);
+                                }
+                            }
+                            for (Order order: ordersFilters){
+                                if (duplicateOrders.contains(order))
+                                    duplicateOrders.remove(order);
+                            }
+                        } else if (!endSumTextInputLayout.getEditText().getText().toString().equals("")){
+                            int endSum = Integer.parseInt(endSumTextInputLayout.getEditText().getText().toString());
+                            for (Order order: duplicateOrders){
+                                int sumOrder = 0;
+                                for (OrderComposition orderComposition : order.getProducts())
+                                {
+                                    sumOrder += Integer.parseInt(orderComposition.getPrice_product()) * Integer.parseInt(orderComposition.count);
+                                }
+                                if (!statusTextInputLayout.getEditText().getText().toString().equals("") && !deliveryTextInputLayout.getEditText().getText().toString().equals("")){
+                                    String status = statusTextInputLayout.getEditText().getText().toString();
+                                    String delivery = deliveryTextInputLayout.getEditText().getText().toString();
+                                    if (sumOrder<=endSum && order.getStatus().equals(status)
+                                            && order.getDelivery().equals(delivery)){
+                                        ordersFilters.add(order);
+                                    }
+                                } else if (!statusTextInputLayout.getEditText().getText().toString().equals("")){
+                                    String status = statusTextInputLayout.getEditText().getText().toString();
+                                    if (sumOrder<=endSum && order.getStatus().equals(status)){
+                                        ordersFilters.add(order);
+                                    }
+                                } else if (!deliveryTextInputLayout.getEditText().getText().toString().equals("")){
+                                    String delivery = deliveryTextInputLayout.getEditText().getText().toString();
+                                    if (sumOrder<=endSum && order.getDelivery().equals(delivery)){
+                                        ordersFilters.add(order);
+                                    }
+                                } else if (sumOrder<=endSum){
+                                    ordersFilters.add(order);
+                                }
+                            }
+                            for (Order order: ordersFilters){
+                                if (duplicateOrders.contains(order))
+                                    duplicateOrders.remove(order);
+                            }
+                        }
+                        else if (!statusTextInputLayout.getEditText().getText().toString().equals("")){
+                            String status = statusTextInputLayout.getEditText().getText().toString();
+                            if (!deliveryTextInputLayout.getEditText().getText().toString().equals("")){
+                                String delivery = deliveryTextInputLayout.getEditText().getText().toString();
+                                for (Order order: duplicateOrders){
+                                    if (order.getStatus().equals(status) && order.getDelivery().equals(delivery)){
+                                        ordersFilters.add(order);
+                                    }
+                                }
+                            } else {
+                                for (Order order: duplicateOrders){
+                                    if (order.getStatus().equals(status)){
+                                        ordersFilters.add(order);
+                                    }
+                                }
+                            }
+                            for (Order order: ordersFilters){
+                                if (duplicateOrders.contains(order))
+                                    duplicateOrders.remove(order);
+                            }
+                        }
+                        else if (!deliveryTextInputLayout.getEditText().getText().toString().equals("")){
+                            String delivery = deliveryTextInputLayout.getEditText().getText().toString();
+                            if (!statusTextInputLayout.getEditText().getText().toString().equals("")){
+                                String status = statusTextInputLayout.getEditText().getText().toString();
+                                for (Order order: duplicateOrders){
+                                    if (order.getStatus().equals(status) && order.getDelivery().equals(delivery)){
+                                        ordersFilters.add(order);
+                                    }
+                                }
+                            } else{
+                                for (Order order: duplicateOrders){
+                                    if (order.getDelivery().equals(delivery)){
+                                        ordersFilters.add(order);
+                                    }
+                                }
+                            }
+                            for (Order order: ordersFilters){
+                                if (duplicateOrders.contains(order))
+                                    duplicateOrders.remove(order);
+                            }
+                        }
+                        if (ordersFilters.size() != 0)
+                            recyclerViewOrders.setAdapter(new RecyclerViewAdapter(getContext(), ordersFilters));
+                        bottomSheetFiltersDialog.dismiss();
+                        recyclerViewOrders.startLayoutAnimation();
+                    }
+                });
+                bottomSheetFiltersDialog.setContentView(bottomSheetFiltersView);
+                bottomSheetFiltersDialog.show();
             }
         });
         searchOrderEditText.addTextChangedListener(new TextWatcher() {

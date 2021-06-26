@@ -110,6 +110,7 @@ public class ProductsFragment extends Fragment {
                     recyclerViewProducts.setLayoutManager(layoutManager);
                     recyclerViewProducts.setAdapter(adapter);
                     frameLayout.setVisibility(View.GONE);
+                    recyclerViewProducts.startLayoutAnimation();
                 }
             }
             @Override

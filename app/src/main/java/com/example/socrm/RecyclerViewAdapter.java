@@ -102,7 +102,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         recyclerViewViewHolder.addressTextView.setText(order.getAddress());
         for (OrderComposition orderComposition : order.getProducts())
         {
-            sumOrder += Integer.parseInt(orderComposition.getPrice_product());
+            sumOrder += Integer.parseInt(orderComposition.getPrice_product()) * Integer.parseInt(orderComposition.count);
         }
         recyclerViewViewHolder.sumTextView.setText(String.valueOf(sumOrder) + "₽");
         // обнуляю для следующих заказов
